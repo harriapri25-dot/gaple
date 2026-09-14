@@ -10,7 +10,7 @@
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at 50% -10%,#26375f 0,#0b1020 38%,#050812 100%);color:var(--text);min-height:100vh}
 button,input{font:inherit}button{cursor:pointer}.app{max-width:1250px;margin:auto;padding:18px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.brand{font-weight:900;font-size:25px}.brand span{color:var(--gold)}.pill{border:1px solid var(--line);background:#11182bcc;border-radius:999px;padding:8px 12px;color:var(--muted)}
 .card{background:linear-gradient(145deg,#141d34e8,#0d1426e8);border:1px solid #ffffff10;border-radius:22px;box-shadow:var(--shadow);backdrop-filter:blur(14px)}.lobby{max-width:720px;margin:7vh auto;padding:28px}.hero{text-align:center}.crown{font-size:55px}.hero h1{font-size:clamp(32px,7vw,58px);margin:4px 0}.hero p{color:var(--muted)}.row{display:flex;gap:10px;flex-wrap:wrap}.field{flex:1;min-width:180px}.field input{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:#080d1b;color:#fff;outline:none}.btn{border:0;border-radius:14px;padding:13px 17px;font-weight:800;background:var(--gold);color:#17120a}.btn.secondary{background:#202c49;color:#fff}.btn.green{background:var(--green);color:#06130d}.small{font-size:12px;color:var(--muted)}.avatar-grid{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}.avatar{font-size:28px;background:#0a1020;border:2px solid transparent;border-radius:14px;padding:8px}.avatar.active{border-color:var(--gold);background:#302816}.hidden{display:none!important}
-.game{display:grid;grid-template-columns:1fr 310px;gap:16px}.table{min-height:720px;padding:16px;position:relative;overflow:hidden;background:radial-gradient(circle,#17482f 0,#0c2b21 48%,#081b17 100%);border-color:#3c805d66}.players{display:grid;grid-template-columns:1fr 1fr;gap:9px}.seat{padding:10px 12px;border-radius:15px;background:#07140fcc;border:1px solid #ffffff10;display:flex;align-items:center;gap:8px}.seat .av{font-size:25px}.seat.me{outline:2px solid #f5c45166}.seat .info{flex:1}.seat b{font-size:13px}.seat small{display:block;color:#9eb19f}.turn{color:var(--gold)!important;font-weight:800}.board{min-height:370px;overflow:auto;align-content:center;display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;padding:35px 10px}.domino{width:48px;height:90px;flex:0 0 48px;background:#f7f3e8;color:#111;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:space-around;box-shadow:0 5px 12px #0007;font-weight:900;position:relative}.domino:after{content:"";position:absolute;left:6px;right:6px;top:50%;border-top:2px solid #aaa}.pip{font-size:20px;line-height:1;letter-spacing:1px;color:#111}.hand{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;padding:12px 0}.hand .domino{width:48px;height:90px;flex:0 0 48px;cursor:pointer;transition:.15s}.hand .domino:hover{transform:translateY(-9px)}.hand .domino.selected{transform:translateY(-12px);outline:3px solid var(--gold)}.controls{display:flex;justify-content:center;gap:8px;margin-top:5px}.sidebar{padding:14px;display:flex;flex-direction:column;gap:12px}.sidebox{padding:13px;border-radius:17px;background:#0b1222;border:1px solid var(--line)}.sidebox h3{margin:0 0 10px;font-size:14px}.chat{height:260px;overflow:auto;display:flex;flex-direction:column;gap:7px}.msg{background:#17213a;border-radius:12px;padding:7px 9px;font-size:12px}.msg b{color:var(--gold)}.chatbar{display:flex;gap:6px;margin-top:7px}.chatbar input{min-width:0;flex:1;background:#070c18;color:#fff;border:1px solid var(--line);border-radius:10px;padding:9px}.emotes{display:flex;gap:5px}.emotes button{background:#1b2742;border:0;border-radius:10px;padding:7px}.scoreline{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.leader{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #ffffff0d}.leader:last-child{border:0}.modal{position:fixed;inset:0;background:#02050bcc;display:flex;align-items:center;justify-content:center;padding:18px;z-index:20}.modal .card{max-width:520px;width:100%;padding:30px;text-align:center}.win{font-size:42px;font-weight:1000;background:linear-gradient(90deg,#fff,#f5c451,#fff);-webkit-background-clip:text;color:transparent}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#17213a;border:1px solid var(--line);padding:10px 15px;border-radius:999px;z-index:30}.confetti{position:fixed;inset:0;pointer-events:none;z-index:25}.piece{position:absolute;width:8px;height:16px;animation:fall 1.8s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}@media(max-width:850px){
+.game{display:grid;grid-template-columns:1fr 310px;gap:16px}.table{min-height:720px;padding:16px;position:relative;overflow:hidden;background:radial-gradient(circle,#17482f 0,#0c2b21 48%,#081b17 100%);border-color:#3c805d66}.players{display:grid;grid-template-columns:1fr 1fr;gap:9px}.seat{padding:10px 12px;border-radius:15px;background:#07140fcc;border:1px solid #ffffff10;display:flex;align-items:center;gap:8px}.seat .av{font-size:25px}.seat.me{outline:2px solid #f5c45166}.seat .info{flex:1}.seat b{font-size:13px}.seat small{display:block;color:#9eb19f}.turn{color:var(--gold)!important;font-weight:800}.board{min-height:370px;overflow:auto;align-content:center;display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;padding:35px 10px}.domino{width:48px;height:90px;flex:0 0 48px;background:#f7f3e8;color:#111;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:space-around;box-shadow:0 5px 12px #0007;font-weight:900;position:relative}.domino:after{content:"";position:absolute;left:6px;right:6px;top:50%;border-top:2px solid #777}.pip{font-size:20px;line-height:1;letter-spacing:1px;color:#111}.hand{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;padding:12px 0}.hand .domino{width:48px;height:90px;flex:0 0 48px;cursor:pointer;transition:.15s}.hand .domino:hover{transform:translateY(-9px)}.hand .domino.selected{transform:translateY(-12px);outline:3px solid var(--gold)}.controls{display:flex;justify-content:center;gap:8px;margin-top:5px}.sidebar{padding:14px;display:flex;flex-direction:column;gap:12px}.sidebox{padding:13px;border-radius:17px;background:#0b1222;border:1px solid var(--line)}.sidebox h3{margin:0 0 10px;font-size:14px}.chat{height:260px;overflow:auto;display:flex;flex-direction:column;gap:7px}.msg{background:#17213a;border-radius:12px;padding:7px 9px;font-size:12px}.msg b{color:var(--gold)}.chatbar{display:flex;gap:6px;margin-top:7px}.chatbar input{min-width:0;flex:1;background:#070c18;color:#fff;border:1px solid var(--line);border-radius:10px;padding:9px}.emotes{display:flex;gap:5px}.emotes button{background:#1b2742;border:0;border-radius:10px;padding:7px}.scoreline{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.leader{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #ffffff0d}.leader:last-child{border:0}.modal{position:fixed;inset:0;background:#02050bcc;display:flex;align-items:center;justify-content:center;padding:18px;z-index:20}.modal .card{max-width:520px;width:100%;padding:30px;text-align:center}.win{font-size:42px;font-weight:1000;background:linear-gradient(90deg,#fff,#f5c451,#fff);-webkit-background-clip:text;color:transparent}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#17213a;border:1px solid var(--line);padding:10px 15px;border-radius:999px;z-index:30}.confetti{position:fixed;inset:0;pointer-events:none;z-index:25}.piece{position:absolute;width:8px;height:16px;animation:fall 1.8s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}@media(max-width:850px){
       .game{grid-template-columns:1fr}.table{min-height:620px}.sidebar{order:2}
       .board{min-height:290px;padding:25px 6px;gap:6px}.lobby{margin:4vh auto;padding:20px}
       .top{align-items:flex-start}.players{grid-template-columns:1fr 1fr}
@@ -118,6 +118,7 @@ async function create(){
   me={id:id(),name,avatar};
   let r=makeRoom();
   r.maxPlayers=playerMode;
+  r.starting=false;
   r.players[me.id]={...me};
   r.hand[me.id]=[];
   await setDoc(doc(db,'rooms',roomId),r);
@@ -146,44 +147,43 @@ async function join(){
 async function tryStartGame(r){
   const ps=Object.values(r.players||{});
   const max=Number(r.maxPlayers||4);
-  if(![2,4].includes(max) || ps.length!==max || r.started || r.starting || starting) return;
+
+  if(![2,4].includes(max) || ps.length!==max || r.started || starting) return;
+
+  // Only the room creator (first player) starts the round.
+  // This avoids two clients racing to deal the same cards and is much faster
+  // than a Firestore transaction for this small game.
+  if(!ps[0] || ps[0].id!==me.id) return;
+
   starting=true;
   try{
-    const roomRef=doc(db,'rooms',roomId);
-    await runTransaction(db,async tx=>{
-      const snap=await tx.get(roomRef);
-      if(!snap.exists()) return;
-      const latest=snap.data();
-      const players=Object.values(latest.players||{});
-      const latestMax=Number(latest.maxPlayers||4);
-      if(latest.started || latest.starting || players.length!==latestMax) return;
+    const d=shuffle(deck());
+    const hands={};
+    const perPlayer=28/max;
 
-      const d=shuffle(deck()), hands={};
-      const perPlayer=28/latestMax;
-      players.forEach((p,i)=>{
-        hands[p.id]=d.slice(i*perPlayer,(i+1)*perPlayer);
-      });
+    ps.forEach((p,i)=>{
+      hands[p.id]=d.slice(i*perPlayer,(i+1)*perPlayer);
+    });
 
-      const starter=players.findIndex(p=>
-        (hands[p.id]||[]).some(c=>c[0]===0&&c[1]===0)
-      );
+    const starter=ps.findIndex(p=>
+      (hands[p.id]||[]).some(c=>c[0]===0&&c[1]===0)
+    );
 
-      tx.update(roomRef,{
-        hand:hands,
-        turn:starter<0?0:starter,
-        started:true,
-        starting:false,
-        board:[],
-        left:null,
-        right:null,
-        opening:null,
-        passes:0,
-        winner:null
-      });
+    await updateDoc(doc(db,'rooms',roomId),{
+      hand:hands,
+      turn:starter>=0?starter:0,
+      started:true,
+      starting:false,
+      board:[],
+      left:null,
+      right:null,
+      opening:null,
+      passes:0,
+      winner:null
     });
   }catch(e){
-    console.error(e);
-    toast('Gagal memulai permainan. Coba lagi.');
+    console.error('Gagal membagikan kartu:',e);
+    toast('Kartu gagal dibagikan. Periksa koneksi/Firebase.');
   }finally{
     starting=false;
   }
@@ -191,19 +191,70 @@ async function tryStartGame(r){
 
 async function joinAfter(){
  $('lobby').classList.add('hidden');$('game').classList.remove('hidden');$('roomPill').textContent='ROOM '+roomId;$('roomPill').classList.remove('hidden');
- unsubRoom=onSnapshot(doc(db,'rooms',roomId),async s=>{if(s.exists()){localState=s.data();render();try{await tryStartGame(localState)}catch(e){console.error(e)}}});
+ unsubRoom=onSnapshot(doc(db,'rooms',roomId),async s=>{
+   if(!s.exists())return;
+   localState=s.data();
+   render();
+   try{await tryStartGame(localState)}catch(e){console.error(e)}
+ });
  unsubChat=onSnapshot(query(collection(db,'rooms',roomId,'chat'),orderBy('createdAt','asc')),s=>{let out='';s.forEach(x=>{let m=x.data();out+=`<div class="msg"><b>${m.avatar||''} ${esc(m.name)}</b>: ${esc(m.text)}</div>`});$('chat').innerHTML=out;$('chat').scrollTop=$('chat').scrollHeight})
 }
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function render(){
- let r=localState, ps=Object.values(r.players||{});$('modeBadge').textContent='MODE '+Number(r.maxPlayers||4)+' PEMAIN • '+ps.length+'/'+Number(r.maxPlayers||4)+' TERISI';$('players').innerHTML=ps.map((p,i)=>`<div class="seat ${p.id===me.id?'me':''}"><div class="av">${p.avatar}</div><div class="info"><b>${esc(p.name)}</b>${r.turn===i?'<small class="turn">● Giliran</small>':'<small>'+((r.hand?.[p.id]||[]).length)+' kartu</small>'}</div></div>`).join('');
- $('board').innerHTML=r.board?.length?r.board.map(c=>domino(c)).join(''):'<div style="text-align:center;color:#a8b8ad">Menunggu 0-0 sebagai pembukaan…</div>';
- let hand=r.hand?.[me.id]||[];if(selected!==null&&!hand[selected])selected=null;$('hand').innerHTML=hand.map((c,i)=>`<div class="domino ${selected===i?'selected':''}" onclick="selectCard(${i})">${pip(c[0])}<span></span>${pip(c[1])}</div>`).join('');
- let started=ps.length===4 && !r.started && r.board?.length===0;
- $('status').textContent= r.winner ? 'Permainan selesai.' : (started?'Semua pemain siap — mulai dengan 0-0.':'Giliran: '+(ps[r.turn]?.name||'…'));
- $('play').disabled=!!r.winner; $('pass').disabled=!!r.winner;
- let lb=Object.entries(r.scores||{}).sort((a,b)=>b[1]-a[1]);$('leaderboard').innerHTML=lb.length?lb.map((x,i)=>`<div class="leader"><span>#${i+1} ${esc(r.players[x[0]]?.name||'')}</span><b>${x[1]||0}</b></div>`).join(''):'<div class="small">Skor muncul setelah ronde.</div>';
- if(r.winner){let p=r.players[r.winner];$('winText').textContent=p?.id===me.id?'👑 ANDA ADALAH KING GAPLE':'👑 '+(p?.name||'Pemenang')+' ADALAH KING GAPLE';$('winSub').textContent='Selamat! Ronde selesai.';$('modal').classList.remove('hidden');confetti()}
+  let r=localState, ps=Object.values(r.players||{}), max=Number(r.maxPlayers||4);
+  $('modeBadge').textContent='MODE '+max+' PEMAIN • '+ps.length+'/'+max+' TERISI';
+
+  $('players').innerHTML=ps.map((p,i)=>{
+    let n=(r.hand?.[p.id]||[]).length;
+    return `<div class="seat ${p.id===me.id?'me':''}">
+      <div class="av">${p.avatar||'🙂'}</div>
+      <div class="info">
+        <b>${esc(p.name)}</b>
+        ${r.started && r.turn===i ? '<small class="turn">● Giliran</small>' :
+          `<small>${r.started ? n+' kartu' : 'Menunggu mulai...'}</small>`}
+      </div>
+    </div>`;
+  }).join('');
+
+  $('board').innerHTML=r.board?.length
+    ? r.board.map(c=>domino(c)).join('')
+    : '<div style="text-align:center;color:#a8b8ad">Menunggu 0-0 sebagai pembukaan…</div>';
+
+  let hand=r.hand?.[me.id]||[];
+  if(selected!==null && !hand[selected]) selected=null;
+  $('hand').innerHTML=hand.map((c,i)=>
+    `<div class="domino ${selected===i?'selected':''}" onclick="selectCard(${i})">
+      ${pip(c[0])}<span></span>${pip(c[1])}
+    </div>`
+  ).join('');
+
+  if(!r.started){
+    $('status').textContent=r.starting
+      ? 'Menyiapkan '+max+' pemain dan membagikan kartu…'
+      : 'Menunggu '+max+' pemain ('+ps.length+'/'+max+')…';
+  }else if(r.winner){
+    $('status').textContent='Permainan selesai.';
+  }else{
+    $('status').textContent='Giliran: '+(ps[r.turn]?.name||'…');
+  }
+
+  $('play').disabled=!r.started || !!r.winner;
+  $('pass').disabled=!r.started || !!r.winner;
+
+  let lb=Object.entries(r.scores||{}).sort((a,b)=>b[1]-a[1]);
+  $('leaderboard').innerHTML=lb.length
+    ? lb.map((x,i)=>`<div class="leader"><span>#${i+1} ${esc(r.players[x[0]]?.name||'')}</span><b>${x[1]||0}</b></div>`).join('')
+    : '<div class="small">Skor muncul setelah ronde.</div>';
+
+  if(r.winner){
+    let p=r.players[r.winner];
+    $('winText').textContent=p?.id===me.id
+      ? '👑 ANDA ADALAH KING GAPLE'
+      : '👑 '+(p?.name||'Pemenang')+' ADALAH KING GAPLE';
+    $('winSub').textContent='Selamat! Ronde selesai.';
+    $('modal').classList.remove('hidden');
+    confetti();
+  }
 }
 function pip(n){return n===0?'•':'●'.repeat(n)}
 function domino(c){return `<div class="domino">${pip(c[0])}<span></span>${pip(c[1])}</div>`}
