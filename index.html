@@ -19,7 +19,23 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1250px;margin:aut
 .face{width:80%;height:39%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);place-items:center}
 .face i{width:7px;height:7px;border-radius:50%;background:#171717;display:block}
 .divider{position:absolute;left:7px;right:7px;top:50%;height:2px;background:#aaa;box-shadow:0 1px 0 #fff}
-.hand-card{user-select:none}.domino:after{content:"";position:absolute;left:6px;right:6px;top:50%;border-top:2px solid #777}.pip{font-size:20px;line-height:1;letter-spacing:1px;color:#111}.hand{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;padding:12px 0}.hand .domino{width:48px;height:90px;flex:0 0 48px;cursor:pointer;transition:.15s}.hand .domino:hover{transform:translateY(-9px)}.hand .domino.selected{transform:translateY(-12px);outline:3px solid var(--gold)}.controls{display:flex;justify-content:center;gap:8px;margin-top:5px}.sidebar{padding:14px;display:flex;flex-direction:column;gap:12px}.sidebox{padding:13px;border-radius:17px;background:#0b1222;border:1px solid var(--line)}.sidebox h3{margin:0 0 10px;font-size:14px}.chat{height:260px;overflow:auto;display:flex;flex-direction:column;gap:7px}.msg{background:#17213a;border-radius:12px;padding:7px 9px;font-size:12px}.msg b{color:var(--gold)}.chatbar{display:flex;gap:6px;margin-top:7px}.chatbar input{min-width:0;flex:1;background:#070c18;color:#fff;border:1px solid var(--line);border-radius:10px;padding:9px}.emotes{display:flex;gap:5px}.emotes button{background:#1b2742;border:0;border-radius:10px;padding:7px}.scoreline{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.leader{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #ffffff0d}.leader:last-child{border:0}.modal{position:fixed;inset:0;background:#02050bcc;display:flex;align-items:center;justify-content:center;padding:18px;z-index:20}.modal .card{max-width:520px;width:100%;padding:30px;text-align:center}.win{font-size:42px;font-weight:1000;background:linear-gradient(90deg,#fff,#f5c451,#fff);-webkit-background-clip:text;color:transparent}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#17213a;border:1px solid var(--line);padding:10px 15px;border-radius:999px;z-index:30}.confetti{position:fixed;inset:0;pointer-events:none;z-index:25}.piece{position:absolute;width:8px;height:16px;animation:fall 1.8s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}@media(max-width:850px){
+
+.hand-card{user-select:none;position:relative;z-index:1}
+.hand-card.selected{
+  transform:translateY(-24px) scale(1.08)!important;
+  outline:3px solid var(--gold);
+  box-shadow:0 16px 28px rgba(255,210,70,.42);
+  z-index:20;
+}
+.hand-card:active{transform:translateY(-18px) scale(1.04)}
+.played-card{animation:cardPlayed .42s cubic-bezier(.2,.8,.2,1)}
+@keyframes cardPlayed{
+  0%{opacity:.25;transform:translateY(45px) scale(.78) rotate(-8deg)}
+  65%{opacity:1;transform:translateY(-8px) scale(1.06) rotate(2deg)}
+  100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}
+}
+.board .domino{width:56px;height:104px;flex:0 0 56px}
+.domino:after{content:"";position:absolute;left:6px;right:6px;top:50%;border-top:2px solid #777}.pip{font-size:20px;line-height:1;letter-spacing:1px;color:#111}.hand{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;padding:12px 0}.hand .domino{width:48px;height:90px;flex:0 0 48px;cursor:pointer;transition:.15s}.hand .domino:hover{transform:translateY(-9px)}.hand .domino.selected{transform:translateY(-12px);outline:3px solid var(--gold)}.controls{display:flex;justify-content:center;gap:8px;margin-top:5px}.sidebar{padding:14px;display:flex;flex-direction:column;gap:12px}.sidebox{padding:13px;border-radius:17px;background:#0b1222;border:1px solid var(--line)}.sidebox h3{margin:0 0 10px;font-size:14px}.chat{height:260px;overflow:auto;display:flex;flex-direction:column;gap:7px}.msg{background:#17213a;border-radius:12px;padding:7px 9px;font-size:12px}.msg b{color:var(--gold)}.chatbar{display:flex;gap:6px;margin-top:7px}.chatbar input{min-width:0;flex:1;background:#070c18;color:#fff;border:1px solid var(--line);border-radius:10px;padding:9px}.emotes{display:flex;gap:5px}.emotes button{background:#1b2742;border:0;border-radius:10px;padding:7px}.scoreline{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.leader{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #ffffff0d}.leader:last-child{border:0}.modal{position:fixed;inset:0;background:#02050bcc;display:flex;align-items:center;justify-content:center;padding:18px;z-index:20}.modal .card{max-width:520px;width:100%;padding:30px;text-align:center}.win{font-size:42px;font-weight:1000;background:linear-gradient(90deg,#fff,#f5c451,#fff);-webkit-background-clip:text;color:transparent}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#17213a;border:1px solid var(--line);padding:10px 15px;border-radius:999px;z-index:30}.confetti{position:fixed;inset:0;pointer-events:none;z-index:25}.piece{position:absolute;width:8px;height:16px;animation:fall 1.8s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}@media(max-width:850px){
       .game{grid-template-columns:1fr}.table{min-height:620px}.sidebar{order:2}
       .board{min-height:290px;padding:25px 6px;gap:6px}.lobby{margin:4vh auto;padding:20px}
       .top{align-items:flex-start}.players{grid-template-columns:1fr 1fr}
@@ -99,7 +115,7 @@ import {getFirestore, doc, setDoc, updateDoc, onSnapshot, collection, addDoc, qu
 const app=initializeApp(CONFIG), db=getFirestore(app);
 const $=id=>document.getElementById(id);
 const AV=['😎','🦁','🐯','🐼','🐸','🐵','🦊','🐨','🐲','👽','🤠','🥷'];
-let avatar=AV[0], roomId=null, me=null, unsubRoom=null, unsubChat=null, selected=null, localState=null, playerMode=4, starting=false;
+let avatar=AV[0], roomId=null, me=null, unsubRoom=null, unsubChat=null, selected=null, localState=null, playerMode=4, starting=false, lastPlayedKey=null;
 
 $('firebaseTest').onclick=async()=>{
   try{
@@ -272,7 +288,11 @@ function render(){
   }).join('');
 
   $('board').innerHTML=r.board?.length
-    ? r.board.map(c=>domino(c)).join('')
+    ? r.board.map((c,i)=>{
+        const key=c[0]+'-'+c[1]+'-'+i;
+        const cls=lastPlayedKey===key?'played-card':'';
+        return domino(c,cls);
+      }).join('')
     : '<div style="text-align:center;color:#a8b8ad">Menunggu 0-0 sebagai pembukaan…</div>';
 
   let hand=Array.isArray(r.hand?.[me.id])?r.hand[me.id]:[];
@@ -295,7 +315,7 @@ function render(){
   }else if(r.winner){
     $('status').textContent='Permainan selesai.';
   }else{
-    $('status').textContent='Giliran: '+(ps[r.turn]?.name||'…')+' • Klik kartu lalu Mainkan, atau double-click kartu';
+    $('status').textContent='Giliran: '+(ps[r.turn]?.name||'…')+' • Klik kartu untuk mengangkatnya • Klik Mainkan untuk menaruhnya • Awal ronde wajib 0-0';
   }
 
   $('play').disabled=!r.started || !!r.winner;
@@ -327,7 +347,15 @@ function pipFace(n){
 }
 function domino(c,extra=''){return `<div class="domino ${extra}">${pipFace(c[0])}<div class="divider"></div>${pipFace(c[1])}</div>`}
 
-window.selectCard=i=>{selected=i;render()}
+window.selectCard=i=>{
+  selected=(selected===i?null:i);
+  render();
+  requestAnimationFrame(()=>{
+    const cards=document.querySelectorAll('#hand .hand-card');
+    const el=[...cards].find(x=>x.getAttribute('onclick')===`selectCard(${i})`);
+    if(el)el.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  });
+}
 async function play(){
   let r=JSON.parse(JSON.stringify(localState));
   r=roomFromStore(r);
@@ -355,6 +383,8 @@ async function play(){
     hand.splice(selected,1);
   }
 
+  const playedKey=c[0]+'-'+c[1]+'-'+r.board.length;
+  lastPlayedKey=playedKey;
   selected=null;
   r.hand[me.id]=hand;
   r.passes=0;
