@@ -61,7 +61,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1250px;margin:aut
    </div>
    <div class="sidebox"><h3>🏆 Leaderboard</h3><div id="leaderboard"></div></div>
    <div class="sidebox"><h3>📌 Aturan</h3><div class="small">• 28 kartu domino<br>• 0-0 wajib membuka permainan<br>• Pemain pertama memilih balak pembukaan<br>• Setelah itu kartu harus nyambung<br>• Tidak bisa main = Pass<br>• Skor = jumlah mata kartu tersisa</div></div>
-   <button id="leave" class="btn secondary">Keluar Room</button>
+   <button id="leave" class="btn secondary">Keluar Room</button><button id="firebaseTest" class="btn secondary" style="margin-top:8px">🔧 Tes Firebase</button>
  </aside>
 </section>
 </div>
@@ -91,6 +91,20 @@ const app=initializeApp(CONFIG), db=getFirestore(app);
 const $=id=>document.getElementById(id);
 const AV=['😎','🦁','🐯','🐼','🐸','🐵','🦊','🐨','🐲','👽','🤠','🥷'];
 let avatar=AV[0], roomId=null, me=null, unsubRoom=null, unsubChat=null, selected=null, localState=null, playerMode=4, starting=false;
+
+$('firebaseTest').onclick=async()=>{
+  try{
+    if(!roomId) return alert('Belum masuk room.');
+    const ref=doc(db,'rooms',roomId);
+    const snap=await getDoc(ref);
+    if(!snap.exists()) return alert('Room tidak ditemukan di Firestore.');
+    await updateDoc(ref,{firebaseTestAt:Date.now()});
+    alert('✅ Firebase READ + WRITE berhasil.\n\nBerarti masalah pembagian kartu ada di struktur/update data game.');
+  }catch(e){
+    console.error('FIREBASE TEST ERROR:',e);
+    alert('❌ Firebase bermasalah.\n\nKode: '+(e?.code||'unknown')+'\nPesan: '+(e?.message||e));
+  }
+};
 
 function updateModeUI(){
   $('mode2').classList.toggle('secondary',playerMode!==2);
@@ -191,8 +205,12 @@ async function tryStartGame(r){
       winner:null
     });
   }catch(e){
-    console.error(e);
-    toast('Gagal membagikan kartu. Cek koneksi/Firebase.');
+    console.error('FIREBASE DEAL ERROR:', e);
+    const code=e?.code||'unknown';
+    const msg=e?.message||String(e);
+    $('status').textContent='❌ Firebase: '+code;
+    toast('Firebase '+code);
+    alert('Gagal membagikan kartu.\n\nKode: '+code+'\nPesan: '+msg);
   }finally{
     starting=false;
   }
