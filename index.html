@@ -126,6 +126,44 @@ function points(c){return c[0]+c[1]}
 function canPlay(c,left,right){return c[0]===left||c[1]===left||c[0]===right||c[1]===right}
 function orient(c,target){return c[0]===target?[c[0],c[1]]:[c[1],c[0]]}
 function makeRoom(){return {players:{},hand:{},board:[],left:null,right:null,turn:0,started:false,opening:null,passes:0,winner:null,scores:{},history:[],createdAt:Date.now()}}
+function cardToStore(c){return Array.isArray(c)?c[0]+'-'+c[1]:c}
+function cardFromStore(c){
+  if(Array.isArray(c))return c;
+  if(typeof c==='string'){
+    let p=c.split('-').map(Number);
+    return p.length===2&&p.every(Number.isFinite)?p:null;
+  }
+  return null;
+}
+function roomToStore(r){
+  let x=JSON.parse(JSON.stringify(r));
+  x.hand={};
+  Object.entries(r.hand||{}).forEach(([id,h])=>{
+    x.hand[id]=(h||[]).map(cardToStore);
+  });
+  x.board=(r.board||[]).map(cardToStore);
+  x.opening=cardToStore(r.opening);
+  x.history=(r.history||[]).map(v=>{
+    if(Array.isArray(v))return v.map(cardToStore);
+    return v;
+  });
+  return x;
+}
+function roomFromStore(r){
+  let x={...r};
+  x.hand={};
+  Object.entries(r.hand||{}).forEach(([id,h])=>{
+    x.hand[id]=(h||[]).map(cardFromStore).filter(Boolean);
+  });
+  x.board=(r.board||[]).map(cardFromStore).filter(Boolean);
+  x.opening=cardFromStore(r.opening);
+  x.history=(r.history||[]).map(v=>{
+    if(Array.isArray(v))return v.map(cardFromStore).filter(Boolean);
+    return v;
+  });
+  return x;
+}
+
 async function create(){
   let name=$('name').value.trim()||'Pemain';
   roomId=code();
@@ -193,7 +231,9 @@ async function tryStartGame(r){
 
     // One Firestore write: cards + turn + started state appear together.
     await updateDoc(doc(db,'rooms',roomId),{
-      hand:hands,
+      hand:Object.fromEntries(
+        Object.entries(hands).map(([id,h])=>[id,h.map(cardToStore)])
+      ),
       turn:starter,
       started:true,
       starting:false,
@@ -301,7 +341,7 @@ async function play(){
  selected=null;r.hand[me.id]=hand;r.passes=0;
  if(!hand.length){r.winner=me.id;r.scores[me.id]=(r.scores[me.id]||0)+100}
  else r.turn=(r.turn+1)%ps.length;
- r.started=true;await updateDoc(doc(db,'rooms',roomId),r)
+ r.started=true;await updateDoc(doc(db,'rooms',roomId),roomToStore(r))
 }
 async function pass(){
  let r=localState,ps=Object.values(r.players||{}),idx=ps.findIndex(p=>p.id===me.id);if(!r?.started||idx!==r.turn||r.winner)return;
