@@ -193,6 +193,21 @@ pointer-events:none;white-space:nowrap}
 }
 .left-end{left:4%}.right-end{right:4%}
 
+
+/* ===== V4: CLICK = IMMEDIATE RAISE ===== */
+#hand .hand-card.is-raised{
+  transform:translate3d(0,-46px,0) rotate(0deg) scale(1.09)!important;
+  z-index:100!important;
+  position:relative!important;
+  filter:brightness(1.08)!important;
+  box-shadow:0 22px 38px rgba(245,196,81,.44),0 0 0 7px rgba(245,196,81,.09)!important;
+  outline:3px solid var(--gold)!important;
+}
+#hand .hand-card.is-raised:hover{
+  transform:translate3d(0,-50px,0) rotate(0deg) scale(1.10)!important;
+}
+#hand .hand-card{will-change:transform}
+
 </style>
 </head>
 <body>
@@ -517,7 +532,7 @@ function render(){
   $('hand').innerHTML=hand.map(x=>
     `<div class="domino hand-card ${selected===x.idx?'selected':''}" data-index="${x.idx}"
       title="Klik untuk memilih • klik Mainkan untuk memainkan • double-click untuk langsung memainkan"
-      onclick="selectCard(${x.idx})" ondblclick="play()">
+      onclick="selectCard(this,${x.idx})" ondblclick="play()">
       ${pipFace(x.c[0])}<div class="divider"></div>${pipFace(x.c[1])}
     </div>`
   ).join('');
@@ -570,15 +585,42 @@ function pipFace(n){
 }
 function domino(c,extra=''){return `<div class="domino ${extra}">${pipFace(c[0])}<div class="divider"></div>${pipFace(c[1])}</div>`}
 
-window.selectCard=i=>{
+window.selectCard=(el,i)=>{
   const h=Array.isArray(localState?.hand?.[me?.id])?localState.hand[me.id]:[];
   if(!h[i]) return;
+
   selected=(selected===i?null:i);
   placementChoice=null;
+
+  // Immediate visual response: the clicked card rises before the Firebase/UI render.
+  document.querySelectorAll('#hand .hand-card').forEach(card=>{
+    card.classList.remove('selected','is-raised');
+    card.style.removeProperty('transform');
+    card.style.removeProperty('z-index');
+    card.style.removeProperty('filter');
+    card.style.removeProperty('box-shadow');
+  });
+
+  if(selected!==null && el){
+    el.classList.add('selected','is-raised');
+    el.style.setProperty('transform','translate3d(0,-46px,0) rotate(0deg) scale(1.09)','important');
+    el.style.setProperty('z-index','100','important');
+    el.style.setProperty('filter','brightness(1.08)','important');
+    el.style.setProperty('box-shadow','0 22px 38px rgba(245,196,81,.44),0 0 0 7px rgba(245,196,81,.09)','important');
+  }
+
+  // Render placement controls, then re-apply the same raised state to the new DOM.
   render();
   requestAnimationFrame(()=>{
-    const el=document.querySelector(`#hand .hand-card[data-index="${i}"]`);
-    if(el) el.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+    const chosen=document.querySelector(`#hand .hand-card[data-index="${i}"]`);
+    if(selected===i && chosen){
+      chosen.classList.add('selected','is-raised');
+      chosen.style.setProperty('transform','translate3d(0,-46px,0) rotate(0deg) scale(1.09)','important');
+      chosen.style.setProperty('z-index','100','important');
+      chosen.style.setProperty('filter','brightness(1.08)','important');
+      chosen.style.setProperty('box-shadow','0 22px 38px rgba(245,196,81,.44),0 0 0 7px rgba(245,196,81,.09)','important');
+      chosen.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+    }
   });
 }
 async function play(){
