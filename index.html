@@ -92,93 +92,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1250px;margin:aut
   transform:translateY(-8px) rotate(0deg) scale(1.035);
   z-index:10;
 }
-.hand-card.selected{
-  transform:translateY(-38px) rotate(0deg) scale(1.09)!important;
-  outline:3px solid var(--gold);
-  box-shadow:0 20px 35px rgba(255,210,70,.45),0 0 0 5px rgba(255,210,70,.08);
-  z-index:100;
-}
-.hand-card.selected:before{
-  content:"";
-  position:absolute;
-  left:8px;right:8px;top:-13px;height:5px;
-  border-radius:8px;background:var(--gold);
-  box-shadow:0 0 15px rgba(255,210,70,.75);
-}
-.hand:after{
-  content:"";
-  position:absolute;left:4%;right:4%;bottom:8px;height:2px;
-  background:rgba(255,255,255,.08);border-radius:50%;
-  pointer-events:none;
-}
-.game-actions{
-  position:absolute;left:0;right:0;bottom:0;
-  height:84px;display:flex;align-items:center;justify-content:center;
-  gap:10px;z-index:50;
-  background:linear-gradient(transparent,rgba(2,20,15,.9) 42%);
-}
-.status-wrap{
-  position:absolute;left:0;right:0;bottom:84px;
-  display:flex;justify-content:center;z-index:45;
-}
-#status{
-  padding:8px 15px;border-radius:999px;
-  background:rgba(3,24,18,.82);
-  border:1px solid rgba(255,255,255,.09);
-  backdrop-filter:blur(8px);
-}
-@keyframes cardPlayed{
-  0%{opacity:.1;transform:translateY(80px) scale(.65) rotate(8deg)}
-  65%{opacity:1;transform:translateY(-10px) scale(1.08) rotate(-2deg)}
-  100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}
-}
-.played-card{animation:cardPlayed .45s cubic-bezier(.2,.8,.2,1)}
-
-.hand{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;padding:12px 0}.hand .domino{width:48px;height:90px;flex:0 0 48px;cursor:pointer;transition:.15s}.hand .domino:hover{transform:translateY(-9px)}.hand .domino.selected{transform:translateY(-12px);outline:3px solid var(--gold)}.controls{display:flex;justify-content:center;gap:8px;margin-top:5px}.sidebar{padding:14px;display:flex;flex-direction:column;gap:12px}.sidebox{padding:13px;border-radius:17px;background:#0b1222;border:1px solid var(--line)}.sidebox h3{margin:0 0 10px;font-size:14px}.chat{height:260px;overflow:auto;display:flex;flex-direction:column;gap:7px}.msg{background:#17213a;border-radius:12px;padding:7px 9px;font-size:12px}.msg b{color:var(--gold)}.chatbar{display:flex;gap:6px;margin-top:7px}.chatbar input{min-width:0;flex:1;background:#070c18;color:#fff;border:1px solid var(--line);border-radius:10px;padding:9px}.emotes{display:flex;gap:5px}.emotes button{background:#1b2742;border:0;border-radius:10px;padding:7px}.scoreline{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.leader{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #ffffff0d}.leader:last-child{border:0}.modal{position:fixed;inset:0;background:#02050bcc;display:flex;align-items:center;justify-content:center;padding:18px;z-index:20}.modal .card{max-width:520px;width:100%;padding:30px;text-align:center}.win{font-size:42px;font-weight:1000;background:linear-gradient(90deg,#fff,#f5c451,#fff);-webkit-background-clip:text;color:transparent}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#17213a;border:1px solid var(--line);padding:10px 15px;border-radius:999px;z-index:30}.confetti{position:fixed;inset:0;pointer-events:none;z-index:25}.piece{position:absolute;width:8px;height:16px;animation:fall 1.8s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}@media(max-width:850px){
-      .game{grid-template-columns:1fr}.table{min-height:620px}.sidebar{order:2}
-      .board{min-height:290px;padding:25px 6px;gap:6px}.lobby{margin:4vh auto;padding:20px}
-      .top{align-items:flex-start}.players{grid-template-columns:1fr 1fr}
-      .hand{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding:16px 6px 20px;scrollbar-width:thin}
-      .hand .domino{flex:0 0 48px}
-    }
-
-@media(max-width:850px){
-  .table{min-height:680px;border-radius:24px}
-  .table:before{inset:12px;border-radius:20px}
-  .board{left:3%;right:3%;top:18%;bottom:25%;padding:25px 10px;gap:5px}
-  .hand{left:2%;right:2%;min-height:160px;padding:42px 8px 18px;justify-content:flex-start}
-  .hand-card.selected{transform:translateY(-30px) rotate(0deg) scale(1.06)!important}
-  .game-actions{height:78px}
-  .status-wrap{bottom:78px}
-}
-
-
-/* ===== HAY GAPLE: SNAKE BOARD + LIVING HAND ===== */
-.table{min-height:760px!important;padding:16px!important;position:relative!important;overflow:hidden!important;
- background:radial-gradient(ellipse at 50% 45%,#18533a 0%,#0a3023 48%,#061c16 100%)!important;
- border:1px solid #4c966d88!important}
-.table:after{content:"";position:absolute;inset:22px;border:1px solid rgba(245,196,81,.16);border-radius:30px;pointer-events:none}
-.board{position:absolute!important;left:3%!important;right:3%!important;top:18%!important;bottom:28%!important;
- min-height:0!important;padding:0!important;display:block!important;overflow:hidden!important;
- background:radial-gradient(ellipse at center,rgba(0,0,0,.12),transparent 67%)!important}
-.board-card-wrap{position:absolute;width:100px;height:58px;z-index:5;transition:left .38s cubic-bezier(.2,.8,.2,1),top .38s cubic-bezier(.2,.8,.2,1),transform .38s cubic-bezier(.2,.8,.2,1)}
-.board-card-wrap .domino{width:92px!important;height:52px!important;flex:0 0 92px!important;flex-direction:row!important;border-radius:8px!important;cursor:default!important}
-.board-card-wrap .face{width:43%!important;height:82%!important}
-.board-card-wrap .divider{top:7px!important;bottom:7px!important;left:50%!important;right:auto!important;width:2px!important;height:auto!important}
-.board-empty{position:absolute;inset:0;display:grid;place-items:center;color:#a8b8ad;font-size:15px}
-.hand{left:3%!important;right:3%!important;bottom:70px!important;min-height:205px!important;padding:54px 12px 22px!important;
- display:flex!important;align-items:flex-end!important;justify-content:center!important;gap:2px!important;
- overflow-x:auto!important;overflow-y:visible!important;z-index:40!important}
-.hand-card{margin:0 -2px!important;position:relative!important;transform-origin:center bottom!important;
- transition:transform .24s cubic-bezier(.18,.9,.25,1),filter .2s,box-shadow .2s!important}
-.hand-card:nth-child(3n){transform:rotate(-2.4deg) translateY(1px)}
-.hand-card:nth-child(3n+1){transform:rotate(1.8deg)}
-.hand-card:nth-child(3n+2){transform:rotate(-.6deg)}
-.hand-card:hover{transform:translateY(-14px) rotate(0deg) scale(1.05)!important;z-index:60!important;filter:brightness(1.04)}
-.hand-card.selected{transform:translateY(-48px) rotate(0deg) scale(1.10)!important;z-index:100!important;
- outline:3px solid var(--gold)!important;box-shadow:0 22px 38px rgba(245,196,81,.42),0 0 0 7px rgba(245,196,81,.08)!important;
- animation:selectedFloat .8s ease-in-out infinite alternate}
-@keyframes selectedFloat{from{filter:brightness(1);margin-bottom:0}to{filter:brightness(1.09);margin-bottom:4px}}
+to{filter:brightness(1.09);margin-bottom:4px}}
 .game-actions{position:absolute!important;left:0!important;right:0!important;bottom:0!important;height:78px!important;
  display:flex!important;align-items:center!important;justify-content:center!important;gap:10px!important;z-index:70!important;
  background:linear-gradient(transparent,rgba(2,20,15,.94) 38%)!important}
@@ -202,6 +116,30 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1250px;margin:aut
  .board-card-wrap{width:84px;height:52px}
  .placement-picker{top:55%;max-width:94vw}
 }
+
+
+.hand-card{
+  position:relative!important;z-index:1!important;
+  transform:translateY(0) rotate(0deg) scale(1)!important;
+  transform-origin:center bottom!important;
+  transition:transform .22s cubic-bezier(.2,.9,.25,1),box-shadow .22s,border-color .18s,filter .18s!important;
+}
+.hand-card:nth-child(3n){transform:rotate(-2.4deg)!important}
+.hand-card:nth-child(3n+1){transform:rotate(1.8deg)!important}
+.hand-card:nth-child(3n+2){transform:rotate(-.6deg)!important}
+.hand-card:hover{transform:translateY(-13px) rotate(0deg) scale(1.045)!important;z-index:60!important}
+.hand-card.selected{
+  transform:translateY(-46px) rotate(0deg) scale(1.09)!important;
+  z-index:100!important;outline:3px solid var(--gold)!important;
+  box-shadow:0 22px 38px rgba(245,196,81,.44),0 0 0 7px rgba(245,196,81,.09)!important;
+  filter:brightness(1.08)!important;
+}
+.hand-card.selected:hover{transform:translateY(-50px) rotate(0deg) scale(1.10)!important}
+
+
+.board:after{content:"PILIH KARTU • ANGKA HARUS NYAMBUNG";position:absolute;left:50%;bottom:8px;
+transform:translateX(-50%);font-size:10px;letter-spacing:1px;color:rgba(255,255,255,.35);
+pointer-events:none;white-space:nowrap}
 
 </style>
 </head>
@@ -450,16 +388,16 @@ function boardCardStyle(slot,index,total){
 }
 function placementUI(r,c){
   if(!r.started || !r.board.length || !c || !canPlay(c,r.left,r.right)) return '';
-  let left=c[0]===r.left||c[1]===r.left;
-  let right=c[0]===r.right||c[1]===r.right;
-  let active=(side,lane)=>placementChoice?.side===side&&placementChoice?.lane===lane?' active':'';
+  const canL=c[0]===r.left||c[1]===r.left;
+  const canR=c[0]===r.right||c[1]===r.right;
+  const active=(side,lane)=>placementChoice?.side===side&&placementChoice?.lane===lane?' active':'';
   return `<div class="placement-picker">
-    <div class="pick-title">Pilih posisi kartu</div>
+    <div class="pick-title">Pilih ujung angka yang sama • ATAS / BAWAH</div>
     <div class="pick-row">
-      ${left?`<button class="place-btn${active('left','top')}" onclick="choosePlacement('left','top')">⬅ ATAS</button>
-               <button class="place-btn${active('left','bottom')}" onclick="choosePlacement('left','bottom')">⬅ BAWAH</button>`:''}
-      ${right?`<button class="place-btn${active('right','top')}" onclick="choosePlacement('right','top')">ATAS ➡</button>
-                <button class="place-btn${active('right','bottom')}" onclick="choosePlacement('right','bottom')">BAWAH ➡</button>`:''}
+      ${canL?`<button class="place-btn${active('left','top')}" onclick="choosePlacement('left','top')">⬅ ATAS</button>
+              <button class="place-btn${active('left','bottom')}" onclick="choosePlacement('left','bottom')">⬅ BAWAH</button>`:''}
+      ${canR?`<button class="place-btn${active('right','top')}" onclick="choosePlacement('right','top')">ATAS ➡</button>
+              <button class="place-btn${active('right','bottom')}" onclick="choosePlacement('right','bottom')">BAWAH ➡</button>`:''}
     </div>
   </div>`;
 }
@@ -499,7 +437,7 @@ function render(){
   });
   if(selected!==null && !hand.some(x=>x.idx===selected)) selected=null;
   $('hand').innerHTML=hand.map(x=>
-    `<div class="domino hand-card ${selected===x.idx?'selected':''}"
+    `<div class="domino hand-card ${selected===x.idx?'selected':''}" data-index="${x.idx}"
       title="Klik untuk memilih • klik Mainkan untuk memainkan • double-click untuk langsung memainkan"
       onclick="selectCard(${x.idx})" ondblclick="play()">
       ${pipFace(x.c[0])}<div class="divider"></div>${pipFace(x.c[1])}
@@ -555,13 +493,14 @@ function pipFace(n){
 function domino(c,extra=''){return `<div class="domino ${extra}">${pipFace(c[0])}<div class="divider"></div>${pipFace(c[1])}</div>`}
 
 window.selectCard=i=>{
+  const h=Array.isArray(localState?.hand?.[me?.id])?localState.hand[me.id]:[];
+  if(!h[i]) return;
   selected=(selected===i?null:i);
   placementChoice=null;
   render();
   requestAnimationFrame(()=>{
-    const cards=document.querySelectorAll('#hand .hand-card');
-    const el=[...cards].find(x=>x.getAttribute('onclick')===`selectCard(${i})`);
-    if(el)el.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+    const el=document.querySelector(`#hand .hand-card[data-index="${i}"]`);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
   });
 }
 async function play(){
@@ -572,6 +511,7 @@ async function play(){
   let hand=[...(r.hand?.[me.id]||[])];
   if(selected===null || !hand[selected]) return toast('Pilih kartu dulu');
   let c=hand[selected];
+  const chosenPlacement=placementChoice ? {...placementChoice} : null;
 
   if(!r.board.length){
     if(!(c[0]===0&&c[1]===0)) return toast('Pembukaan wajib 0-0');
@@ -580,8 +520,8 @@ async function play(){
   }else{
     if(!canPlay(c,r.left,r.right)) return toast('Kartu tidak nyambung dengan ujung meja');
 
-    let side=placementChoice?.side;
-    let lane=placementChoice?.lane;
+    let side=chosenPlacement?.side;
+    let lane=chosenPlacement?.lane;
     if(!side){
       // If only one end is possible, still require the visual lane choice.
       const canL=c[0]===r.left||c[1]===r.left;
