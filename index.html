@@ -10,12 +10,21 @@
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at 50% -10%,#26375f 0,#0b1020 38%,#050812 100%);color:var(--text);min-height:100vh}
 button,input{font:inherit}button{cursor:pointer}.app{max-width:1250px;margin:auto;padding:18px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.brand{font-weight:900;font-size:25px}.brand span{color:var(--gold)}.pill{border:1px solid var(--line);background:#11182bcc;border-radius:999px;padding:8px 12px;color:var(--muted)}
 .card{background:linear-gradient(145deg,#141d34e8,#0d1426e8);border:1px solid #ffffff10;border-radius:22px;box-shadow:var(--shadow);backdrop-filter:blur(14px)}.lobby{max-width:720px;margin:7vh auto;padding:28px}.hero{text-align:center}.crown{font-size:55px}.hero h1{font-size:clamp(32px,7vw,58px);margin:4px 0}.hero p{color:var(--muted)}.row{display:flex;gap:10px;flex-wrap:wrap}.field{flex:1;min-width:180px}.field input{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:#080d1b;color:#fff;outline:none}.btn{border:0;border-radius:14px;padding:13px 17px;font-weight:800;background:var(--gold);color:#17120a}.btn.secondary{background:#202c49;color:#fff}.btn.green{background:var(--green);color:#06130d}.small{font-size:12px;color:var(--muted)}.avatar-grid{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}.avatar{font-size:28px;background:#0a1020;border:2px solid transparent;border-radius:14px;padding:8px}.avatar.active{border-color:var(--gold);background:#302816}.hidden{display:none!important}
-.game{display:grid;grid-template-columns:1fr 310px;gap:16px}.table{min-height:720px;padding:16px;position:relative;overflow:hidden;background:radial-gradient(circle,#17482f 0,#0c2b21 48%,#081b17 100%);border-color:#3c805d66}.players{display:grid;grid-template-columns:1fr 1fr;gap:9px}.seat{padding:10px 12px;border-radius:15px;background:#07140fcc;border:1px solid #ffffff10;display:flex;align-items:center;gap:8px}.seat .av{font-size:25px}.seat.me{outline:2px solid #f5c45166}.seat .info{flex:1}.seat b{font-size:13px}.seat small{display:block;color:#9eb19f}.turn{color:var(--gold)!important;font-weight:800}.board{min-height:370px;overflow:auto;align-content:center;display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:nowrap;padding:35px 18px;scrollbar-width:thin}.board .domino{flex:0 0 54px}.domino{width:54px;height:108px;flex:0 0 54px;background:linear-gradient(145deg,#fffdf6,#e9e1cf);color:#141414;border:2px solid #b9aa8f;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:8px 6px;box-sizing:border-box;box-shadow:0 6px 14px #0008,inset 0 0 0 1px #ffffffaa;position:relative;user-select:none}.domino:after{content:"";position:absolute;left:7px;right:7px;top:50%;border-top:2px solid #9b907d}.domino .half{width:100%;height:45%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);place-items:center}.domino .dot{width:7px;height:7px;border-radius:50%;background:#161616;display:block}.domino.hand-card{cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}.domino.hand-card:hover{transform:translateY(-12px);box-shadow:0 14px 22px #0009}.domino.hand-card.selected{transform:translateY(-16px) scale(1.04);border-color:var(--gold);box-shadow:0 16px 26px #000b,0 0 0 3px #f5c45155}.pip{font-size:20px}.hand{display:flex;justify-content:center;align-items:flex-end;gap:8px;flex-wrap:wrap;padding:18px 8px 24px;min-height:130px}.hand .domino{width:54px;height:108px;flex:0 0 54px}.controls{display:flex;justify-content:center;gap:8px;margin-top:5px}.sidebar{padding:14px;display:flex;flex-direction:column;gap:12px}.sidebox{padding:13px;border-radius:17px;background:#0b1222;border:1px solid var(--line)}.sidebox h3{margin:0 0 10px;font-size:14px}.chat{height:260px;overflow:auto;display:flex;flex-direction:column;gap:7px}.msg{background:#17213a;border-radius:12px;padding:7px 9px;font-size:12px}.msg b{color:var(--gold)}.chatbar{display:flex;gap:6px;margin-top:7px}.chatbar input{min-width:0;flex:1;background:#070c18;color:#fff;border:1px solid var(--line);border-radius:10px;padding:9px}.emotes{display:flex;gap:5px}.emotes button{background:#1b2742;border:0;border-radius:10px;padding:7px}.scoreline{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.leader{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #ffffff0d}.leader:last-child{border:0}.modal{position:fixed;inset:0;background:#02050bcc;display:flex;align-items:center;justify-content:center;padding:18px;z-index:20}.modal .card{max-width:520px;width:100%;padding:30px;text-align:center}.win{font-size:42px;font-weight:1000;background:linear-gradient(90deg,#fff,#f5c451,#fff);-webkit-background-clip:text;color:transparent}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#17213a;border:1px solid var(--line);padding:10px 15px;border-radius:999px;z-index:30}.confetti{position:fixed;inset:0;pointer-events:none;z-index:25}.piece{position:absolute;width:8px;height:16px;animation:fall 1.8s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}@media(max-width:850px){
+.game{display:grid;grid-template-columns:1fr 310px;gap:16px}.table{min-height:720px;padding:16px;position:relative;overflow:hidden;background:radial-gradient(circle,#17482f 0,#0c2b21 48%,#081b17 100%);border-color:#3c805d66}.players{display:grid;grid-template-columns:1fr 1fr;gap:9px}.seat{padding:10px 12px;border-radius:15px;background:#07140fcc;border:1px solid #ffffff10;display:flex;align-items:center;gap:8px}.seat .av{font-size:25px}.seat.me{outline:2px solid #f5c45166}.seat .info{flex:1}.seat b{font-size:13px}.seat small{display:block;color:#9eb19f}.turn{color:var(--gold)!important;font-weight:800}.board{min-height:370px;overflow:auto;align-content:center;justify-content:center;flex-wrap:wrap;display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;padding:35px 10px}.domino{position:relative;display:flex;flex-direction:column;justify-content:space-around;align-items:center;
+  width:56px;height:104px;flex:0 0 56px;border-radius:9px;background:linear-gradient(145deg,#fff,#e8e8e8);
+  border:2px solid #b7b7b7;box-shadow:0 5px 12px rgba(0,0,0,.35);color:#151515;cursor:pointer;
+  transition:transform .16s ease,box-shadow .16s ease}
+.domino:hover{transform:translateY(-7px);box-shadow:0 10px 18px rgba(0,0,0,.4)}
+.domino.selected{transform:translateY(-14px) scale(1.05);border-color:#ffd45c;box-shadow:0 12px 22px rgba(255,210,70,.35)}
+.face{width:80%;height:39%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);place-items:center}
+.face i{width:7px;height:7px;border-radius:50%;background:#171717;display:block}
+.divider{position:absolute;left:7px;right:7px;top:50%;height:2px;background:#aaa;box-shadow:0 1px 0 #fff}
+.hand-card{user-select:none}.domino:after{content:"";position:absolute;left:6px;right:6px;top:50%;border-top:2px solid #777}.pip{font-size:20px;line-height:1;letter-spacing:1px;color:#111}.hand{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;padding:12px 0}.hand .domino{width:48px;height:90px;flex:0 0 48px;cursor:pointer;transition:.15s}.hand .domino:hover{transform:translateY(-9px)}.hand .domino.selected{transform:translateY(-12px);outline:3px solid var(--gold)}.controls{display:flex;justify-content:center;gap:8px;margin-top:5px}.sidebar{padding:14px;display:flex;flex-direction:column;gap:12px}.sidebox{padding:13px;border-radius:17px;background:#0b1222;border:1px solid var(--line)}.sidebox h3{margin:0 0 10px;font-size:14px}.chat{height:260px;overflow:auto;display:flex;flex-direction:column;gap:7px}.msg{background:#17213a;border-radius:12px;padding:7px 9px;font-size:12px}.msg b{color:var(--gold)}.chatbar{display:flex;gap:6px;margin-top:7px}.chatbar input{min-width:0;flex:1;background:#070c18;color:#fff;border:1px solid var(--line);border-radius:10px;padding:9px}.emotes{display:flex;gap:5px}.emotes button{background:#1b2742;border:0;border-radius:10px;padding:7px}.scoreline{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.leader{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #ffffff0d}.leader:last-child{border:0}.modal{position:fixed;inset:0;background:#02050bcc;display:flex;align-items:center;justify-content:center;padding:18px;z-index:20}.modal .card{max-width:520px;width:100%;padding:30px;text-align:center}.win{font-size:42px;font-weight:1000;background:linear-gradient(90deg,#fff,#f5c451,#fff);-webkit-background-clip:text;color:transparent}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#17213a;border:1px solid var(--line);padding:10px 15px;border-radius:999px;z-index:30}.confetti{position:fixed;inset:0;pointer-events:none;z-index:25}.piece{position:absolute;width:8px;height:16px;animation:fall 1.8s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}@media(max-width:850px){
       .game{grid-template-columns:1fr}.table{min-height:620px}.sidebar{order:2}
       .board{min-height:290px;padding:25px 6px;gap:6px}.lobby{margin:4vh auto;padding:20px}
       .top{align-items:flex-start}.players{grid-template-columns:1fr 1fr}
       .hand{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding:16px 6px 20px;scrollbar-width:thin}
-      .hand .domino{flex:0 0 54px}
+      .hand .domino{flex:0 0 48px}
     }
 </style>
 </head>
@@ -126,41 +135,28 @@ function points(c){return c[0]+c[1]}
 function canPlay(c,left,right){return c[0]===left||c[1]===left||c[0]===right||c[1]===right}
 function orient(c,target){return c[0]===target?[c[0],c[1]]:[c[1],c[0]]}
 function makeRoom(){return {players:{},hand:{},board:[],left:null,right:null,turn:0,started:false,opening:null,passes:0,winner:null,scores:{},history:[],createdAt:Date.now()}}
-function cardToStore(c){return Array.isArray(c)?c[0]+'-'+c[1]:c}
+function cardToStore(c){
+  if(!Array.isArray(c) || c.length!==2) return null;
+  return {a:Number(c[0]),b:Number(c[1])};
+}
 function cardFromStore(c){
-  if(Array.isArray(c))return c;
+  if(Array.isArray(c) && c.length===2) return [Number(c[0]),Number(c[1])];
+  if(c && typeof c==='object' && Number.isFinite(Number(c.a)) && Number.isFinite(Number(c.b)))
+    return [Number(c.a),Number(c.b)];
   if(typeof c==='string'){
     let p=c.split('-').map(Number);
-    return p.length===2&&p.every(Number.isFinite)?p:null;
+    if(p.length===2 && p.every(Number.isFinite)) return p;
   }
   return null;
 }
-function roomToStore(r){
-  let x=JSON.parse(JSON.stringify(r));
-  x.hand={};
-  Object.entries(r.hand||{}).forEach(([id,h])=>{
-    x.hand[id]=(h||[]).map(cardToStore);
-  });
-  x.board=(r.board||[]).map(cardToStore);
-  x.opening=cardToStore(r.opening);
-  x.history=(r.history||[]).map(v=>{
-    if(Array.isArray(v))return v.map(cardToStore);
-    return v;
-  });
-  return x;
-}
+function cardsToStore(arr){return (arr||[]).map(cardToStore).filter(Boolean)}
+function cardsFromStore(arr){return (arr||[]).map(cardFromStore).filter(Boolean)}
 function roomFromStore(r){
   let x={...r};
   x.hand={};
-  Object.entries(r.hand||{}).forEach(([id,h])=>{
-    x.hand[id]=(h||[]).map(cardFromStore).filter(Boolean);
-  });
-  x.board=(r.board||[]).map(cardFromStore).filter(Boolean);
+  Object.entries(r.hand||{}).forEach(([id,h])=>x.hand[id]=cardsFromStore(h));
+  x.board=cardsFromStore(r.board);
   x.opening=cardFromStore(r.opening);
-  x.history=(r.history||[]).map(v=>{
-    if(Array.isArray(v))return v.map(cardFromStore).filter(Boolean);
-    return v;
-  });
   return x;
 }
 
@@ -206,51 +202,43 @@ async function join(){
 async function tryStartGame(r){
   const ps=Object.values(r.players||{});
   const max=Number(r.maxPlayers||4);
-
   if(![2,4].includes(max) || ps.length!==max || r.started || starting) return;
-
-  // Only the room creator deals the cards. This prevents duplicate deals.
-  if(!ps[0] || ps[0].id!==me.id) return;
+  if(ps[0]?.id!==me.id) return; // room creator deals
 
   starting=true;
-  $('status').textContent='🃏 Membagikan kartu...';
-
+  render();
   try{
     const d=shuffle(deck());
     const hands={};
-    const perPlayer=28/max;
+    const per=Math.floor(28/max);
 
-    for(let i=0;i<ps.length;i++){
-      hands[ps[i].id]=d.slice(i*perPlayer,(i+1)*perPlayer);
-    }
+    ps.forEach((p,i)=>{
+      hands[p.id]=d.slice(i*per,(i+1)*per);
+    });
 
-    let starter=ps.findIndex(p=>
-      hands[p.id].some(c=>c[0]===0&&c[1]===0)
-    );
+    let starter=ps.findIndex(p=>(hands[p.id]||[]).some(c=>c[0]===0&&c[1]===0));
     if(starter<0) starter=0;
 
-    // One Firestore write: cards + turn + started state appear together.
+    // Firestore-safe: arrays contain objects, never arrays.
+    const handForDb={};
+    ps.forEach(p=>handForDb[p.id]=cardsToStore(hands[p.id]));
+
     await updateDoc(doc(db,'rooms',roomId),{
-      hand:Object.fromEntries(
-        Object.entries(hands).map(([id,h])=>[id,h.map(cardToStore)])
-      ),
-      turn:starter,
-      started:true,
-      starting:false,
+      hand:handForDb,
       board:[],
       left:null,
       right:null,
       opening:null,
+      turn:starter,
       passes:0,
-      winner:null
+      winner:null,
+      started:true,
+      starting:false
     });
   }catch(e){
-    console.error('FIREBASE DEAL ERROR:', e);
-    const code=e?.code||'unknown';
-    const msg=e?.message||String(e);
-    $('status').textContent='❌ Firebase: '+code;
-    toast('Firebase '+code);
-    alert('Gagal membagikan kartu.\n\nKode: '+code+'\nPesan: '+msg);
+    console.error('DEAL ERROR',e);
+    $('status').textContent='❌ Gagal membagikan kartu';
+    alert('Gagal membagikan kartu.\\n\\nKode: '+(e?.code||'unknown')+'\\nPesan: '+(e?.message||e));
   }finally{
     starting=false;
   }
@@ -260,7 +248,7 @@ async function joinAfter(){
  $('lobby').classList.add('hidden');$('game').classList.remove('hidden');$('roomPill').textContent='ROOM '+roomId;$('roomPill').classList.remove('hidden');
  unsubRoom=onSnapshot(doc(db,'rooms',roomId),async s=>{
    if(!s.exists())return;
-   localState=s.data();
+   localState=roomFromStore(s.data());
    render();
    try{await tryStartGame(localState)}catch(e){console.error(e)}
  });
@@ -287,9 +275,18 @@ function render(){
     ? r.board.map(c=>domino(c)).join('')
     : '<div style="text-align:center;color:#a8b8ad">Menunggu 0-0 sebagai pembukaan…</div>';
 
-  let hand=sortHand(Array.isArray(r.hand?.[me.id])?r.hand[me.id]:[]);
-  if(selected!==null && !hand[selected]) selected=null;
-  $('hand').innerHTML=hand.map((c,i)=>domino(c,true,i)).join('');
+  let hand=Array.isArray(r.hand?.[me.id])?r.hand[me.id]:[];
+  hand=hand.map((c,idx)=>({c,idx})).sort((x,y)=>{
+    let ax=x.c[0]+x.c[1], ay=y.c[0]+y.c[1];
+    return ax-ay || x.c[0]-y.c[0] || x.c[1]-y.c[1];
+  });
+  if(selected!==null && !hand.some(x=>x.idx===selected)) selected=null;
+  $('hand').innerHTML=hand.map(x=>
+    `<div class="domino hand-card ${selected===x.idx?'selected':''}"
+      onclick="selectCard(${x.idx})" ondblclick="play()">
+      ${pipFace(x.c[0])}<div class="divider"></div>${pipFace(x.c[1])}
+    </div>`
+  ).join('');
 
   if(!r.started){
     $('status').textContent=r.starting
@@ -298,7 +295,7 @@ function render(){
   }else if(r.winner){
     $('status').textContent='Permainan selesai.';
   }else{
-    $('status').textContent='Giliran: '+(ps[r.turn]?.name||'…');
+    $('status').textContent='Giliran: '+(ps[r.turn]?.name||'…')+' • Klik kartu lalu Mainkan, atau double-click kartu';
   }
 
   $('play').disabled=!r.started || !!r.winner;
@@ -319,45 +316,99 @@ function render(){
     confetti();
   }
 }
-const PIP_POS={0:[],1:[[2,2]],2:[[1,1],[3,3]],3:[[1,1],[2,2],[3,3]],4:[[1,1],[1,3],[3,1],[3,3]],5:[[1,1],[1,3],[2,2],[3,1],[3,3]],6:[[1,1],[2,1],[3,1],[1,3],[2,3],[3,3]]};
-function half(n){return `<div class="half">${PIP_POS[n].map(([r,c])=>`<i class="dot" style="grid-row:${r};grid-column:${c}"></i>`).join('')}</div>`}
-function domino(c,hand=false,i=null){let cls='domino'+(hand?' hand-card':'')+(hand&&selected===i?' selected':'');return `<div class="${cls}" ${hand?`onclick="selectCard(${i})"`:''} aria-label="${c[0]}-${c[1]}">${half(c[0])}${half(c[1])}</div>`}
-function sortHand(hand){return [...hand].sort((a,b)=>a[0]-b[0]||a[1]-b[1])}
-window.selectCard=i=>{
-  if(!localState?.started||localState.winner)return;
-  let ps=Object.values(localState.players||{}), idx=ps.findIndex(p=>p.id===me.id);
-  if(idx!==localState.turn)return toast('Belum giliran kamu');
-  let hand=sortHand([...(localState.hand?.[me.id]||[])]), c=hand[i];
-  if(!c)return;
-  if(selected===i){play(i);return}
-  selected=i;render();
-  if(!localState.board?.length&&c[0]===0&&c[1]===0)play(i);
+const PIPS={
+0:[],1:[[1,1]],2:[[0,0],[2,2]],3:[[0,0],[1,1],[2,2]],
+4:[[0,0],[0,2],[2,0],[2,2]],5:[[0,0],[0,2],[1,1],[2,0],[2,2]],
+6:[[0,0],[0,1],[0,2],[2,0],[2,1],[2,2]]
+};
+function pipFace(n){
+  let cells=PIPS[n].map(([r,c])=>`<i style="grid-row:${r+1};grid-column:${c+1}"></i>`).join('');
+  return `<div class="face">${cells}</div>`;
 }
-async function play(indexOverride=null){
- let r=localState,ps=Object.values(r.players||{}),idx=ps.findIndex(p=>p.id===me.id);
- if(!r?.started||idx!==r.turn||r.winner)return;
- let hand=sortHand([...(r.hand?.[me.id]||[])]),useIndex=indexOverride!==null?indexOverride:selected;
- if(useIndex===null||!hand[useIndex])return toast('Pilih kartu dulu');
- let c=hand[useIndex];
- if(!r.board.length){
-   if(c[0]!==0||c[1]!==0)return toast('Pembukaan wajib kartu 0-0');
-   r.board=[c];r.left=c[0];r.right=c[1];r.opening=c;hand.splice(useIndex,1);
- }else{
-   if(!canPlay(c,r.left,r.right))return toast('Kartu tidak nyambung dengan ujung meja');
-   let target=(c[0]===r.left||c[1]===r.left)?r.left:r.right,oc=orient(c,target);
-   if(target===r.left){r.board.unshift(oc);r.left=oc[1]}else{r.board.push(oc);r.right=oc[0]}
-   hand.splice(useIndex,1);
- }
- selected=null;r.hand[me.id]=sortHand(hand);r.passes=0;
- if(!hand.length){r.winner=me.id;r.scores[me.id]=(r.scores[me.id]||0)+100}
- else r.turn=(r.turn+1)%ps.length;
- await updateDoc(doc(db,'rooms',roomId),roomToStore(r));
+function domino(c,extra=''){return `<div class="domino ${extra}">${pipFace(c[0])}<div class="divider"></div>${pipFace(c[1])}</div>`}
+
+window.selectCard=i=>{selected=i;render()}
+async function play(){
+  let r=JSON.parse(JSON.stringify(localState));
+  r=roomFromStore(r);
+  let ps=Object.values(r.players||{}), idx=ps.findIndex(p=>p.id===me.id);
+  if(!r?.started || idx!==r.turn || r.winner) return;
+  let hand=[...(r.hand?.[me.id]||[])];
+  if(selected===null || !hand[selected]) return toast('Pilih kartu dulu');
+
+  let c=hand[selected];
+
+  if(!r.board.length){
+    if(!(c[0]===0&&c[1]===0)) return toast('Pembukaan wajib 0-0');
+    r.board=[c]; r.left=0; r.right=0; r.opening=c; hand.splice(selected,1);
+  }else{
+    if(!canPlay(c,r.left,r.right)) return toast('Kartu tidak nyambung dengan ujung meja');
+    if(c[0]===r.left){
+      r.board.unshift(c); r.left=c[1];
+    }else if(c[1]===r.left){
+      let oc=[c[1],c[0]]; r.board.unshift(oc); r.left=oc[1];
+    }else if(c[0]===r.right){
+      r.board.push(c); r.right=c[1];
+    }else{
+      let oc=[c[1],c[0]]; r.board.push(oc); r.right=oc[1];
+    }
+    hand.splice(selected,1);
+  }
+
+  selected=null;
+  r.hand[me.id]=hand;
+  r.passes=0;
+
+  if(!hand.length){
+    r.winner=me.id;
+    r.scores={...(r.scores||{})};
+    r.scores[me.id]=(r.scores[me.id]||0)+100;
+  }else{
+    r.turn=(r.turn+1)%ps.length;
+  }
+
+  await updateDoc(doc(db,'rooms',roomId),{
+    hand:Object.fromEntries(Object.entries(r.hand||{}).map(([id,h])=>[id,cardsToStore(h)])),
+    board:cardsToStore(r.board),
+    left:r.left??null,
+    right:r.right??null,
+    opening:cardToStore(r.opening),
+    passes:r.passes||0,
+    turn:r.turn,
+    winner:r.winner||null,
+    scores:r.scores||{},
+    started:true
+  });
+  render();
 }
 async function pass(){
- let r=localState,ps=Object.values(r.players||{}),idx=ps.findIndex(p=>p.id===me.id);if(!r?.started||idx!==r.turn||r.winner)return;
- r.passes=(r.passes||0)+1;r.turn=(r.turn+1)%ps.length;
- if(r.passes>=ps.length){let scores={...(r.scores||{})};ps.forEach(p=>scores[p.id]=(scores[p.id]||0)+(r.hand?.[p.id]||[]).reduce((a,c)=>a+points(c),0));let winner=ps.slice().sort((a,b)=>(r.hand?.[a.id]||[]).reduce((x,c)=>x+points(c),0)-(r.hand?.[b.id]||[]).reduce((x,c)=>x+points(c),0))[0];r.winner=winner.id;r.scores=scores}
- await updateDoc(doc(db,'rooms',roomId),r)
+  let r=JSON.parse(JSON.stringify(localState));
+  r=roomFromStore(r);
+  let ps=Object.values(r.players||{}),idx=ps.findIndex(p=>p.id===me.id);
+  if(!r?.started || idx!==r.turn || r.winner) return;
+
+  r.passes=(r.passes||0)+1;
+  r.turn=(r.turn+1)%ps.length;
+
+  let winner=null, scores={...(r.scores||{})};
+  if(r.passes>=ps.length){
+    ps.forEach(p=>{
+      scores[p.id]=(scores[p.id]||0)+(r.hand?.[p.id]||[]).reduce((a,c)=>a+points(c),0);
+    });
+    winner=ps.slice().sort((a,b)=>
+      (r.hand?.[a.id]||[]).reduce((x,c)=>x+points(c),0)-
+      (r.hand?.[b.id]||[]).reduce((x,c)=>x+points(c),0)
+    )[0];
+    if(winner) r.winner=winner.id;
+  }
+
+  await updateDoc(doc(db,'rooms',roomId),{
+    passes:r.passes,
+    turn:r.turn,
+    winner:r.winner||null,
+    scores
+  });
+  render();
 }
 async function send(text){if(!text.trim())return;await addDoc(collection(db,'rooms',roomId,'chat'),{name:me.name,avatar:me.avatar,text:text.trim(),createdAt:serverTimestamp()});}
 window.sendEmoji=e=>send(e);
