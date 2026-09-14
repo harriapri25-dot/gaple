@@ -141,6 +141,58 @@ to{filter:brightness(1.09);margin-bottom:4px}}
 transform:translateX(-50%);font-size:10px;letter-spacing:1px;color:rgba(255,255,255,.35);
 pointer-events:none;white-space:nowrap}
 
+
+/* ===== V3 REAL SNAKE TABLE ===== */
+.board{
+  left:2%!important;right:2%!important;top:12%!important;bottom:25%!important;
+  overflow:visible!important;
+}
+.board-card-wrap{
+  width:82px!important;height:50px!important;
+  transition:left .48s cubic-bezier(.2,.8,.2,1),top .48s cubic-bezier(.2,.8,.2,1),
+             transform .48s cubic-bezier(.2,.8,.2,1),filter .25s!important;
+  filter:drop-shadow(0 8px 8px rgba(0,0,0,.25));
+}
+.board-card-wrap .domino{
+  width:76px!important;height:46px!important;
+  flex:0 0 76px!important;
+  background:linear-gradient(145deg,#fff,#e8e8e8)!important;
+  border:2px solid rgba(25,25,25,.16)!important;
+  box-shadow:0 4px 10px rgba(0,0,0,.28)!important;
+}
+.board-card-wrap .face{
+  width:43%!important;height:84%!important;
+}
+.board-card-wrap .divider{
+  top:5px!important;bottom:5px!important;
+  left:50%!important;width:2px!important;
+}
+.board-card-wrap .pip{
+  width:7px!important;height:7px!important;
+  background:#171717!important;
+  box-shadow:0 1px 1px rgba(0,0,0,.22)!important;
+}
+.board-empty{font-weight:700;letter-spacing:.2px}
+.placement-picker{
+  top:88%!important;
+  padding:7px 10px!important;
+  z-index:90!important;
+}
+.pick-title{font-size:11px!important;margin-bottom:5px!important}
+.place-btn{
+  padding:7px 10px!important;font-size:10px!important;
+  box-shadow:0 3px 8px rgba(0,0,0,.2);
+}
+
+
+#endpoints{position:absolute;inset:0;pointer-events:none;z-index:35}
+.end-badge{
+  position:absolute;top:14%;padding:5px 9px;border-radius:999px;
+  background:rgba(4,18,13,.82);border:1px solid rgba(245,196,81,.32);
+  color:#f4f7f2;font-size:11px;font-weight:900;box-shadow:0 5px 12px rgba(0,0,0,.2)
+}
+.left-end{left:4%}.right-end{right:4%}
+
 </style>
 </head>
 <body>
@@ -372,19 +424,37 @@ async function joinAfter(){
 }
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 
+function snakeSlot(side, rank){
+  // Each end grows from the center in a compact zig-zag path.
+  // This keeps every domino visible instead of piling them on top of each other.
+  const paths = {
+    right:[
+      [56,50,0],[64,50,0],[72,50,0],[80,50,0],
+      [86,45, -90],[86,36,-90],[86,27,-90],
+      [80,22,180],[72,22,180],[64,22,180],[56,22,180],
+      [50,28,90],[50,37,90],[50,46,90]
+    ],
+    left:[
+      [44,50,0],[36,50,0],[28,50,0],[20,50,0],
+      [14,55,90],[14,64,90],[14,73,90],
+      [20,78,180],[28,78,180],[36,78,180],[44,78,180],
+      [50,72,-90],[50,63,-90],[50,54,-90]
+    ]
+  };
+  return paths[side]?.[Math.min(rank,13)] || null;
+}
 function boardCardStyle(slot,index,total){
   if(!slot || slot.side==='center')
     return `left:50%;top:50%;transform:translate(-50%,-50%) rotate(0deg);`;
-  let same=localState.boardLayout||[];
   let rank=0;
+  const layouts=localState?.boardLayout||[];
   for(let i=0;i<index;i++){
-    if((same[i]?.side||'')===slot.side) rank++;
+    if(layouts[i]?.side===slot.side) rank++;
   }
-  // Snake outward from the center. Top/bottom is the branch around the matching end.
-  let step=8.5, x=50 + (slot.side==='right'?1:-1)*(10 + rank*step);
-  let y=50 + (slot.lane==='top'?-1:1)*(rank%2?7:3);
-  let rot=slot.rot||0;
-  return `left:${x}%;top:${y}%;transform:translate(-50%,-50%) rotate(${rot}deg);`;
+  const p=snakeSlot(slot.side,rank);
+  if(!p) return `left:50%;top:50%;transform:translate(-50%,-50%) rotate(0deg);`;
+  const rot=p[2] + (slot.lane==='bottom' ? 0 : 0);
+  return `left:${p[0]}%;top:${p[1]}%;transform:translate(-50%,-50%) rotate(${rot}deg);`;
 }
 function placementUI(r,c){
   if(!r.started || !r.board.length || !c || !canPlay(c,r.left,r.right)) return '';
@@ -392,7 +462,7 @@ function placementUI(r,c){
   const canR=c[0]===r.right||c[1]===r.right;
   const active=(side,lane)=>placementChoice?.side===side&&placementChoice?.lane===lane?' active':'';
   return `<div class="placement-picker">
-    <div class="pick-title">Pilih ujung angka yang sama • ATAS / BAWAH</div>
+    <div class="pick-title">Pilih ujung angka yang sama → lalu ATAS / BAWAH</div>
     <div class="pick-row">
       ${canL?`<button class="place-btn${active('left','top')}" onclick="choosePlacement('left','top')">⬅ ATAS</button>
               <button class="place-btn${active('left','bottom')}" onclick="choosePlacement('left','bottom')">⬅ BAWAH</button>`:''}
@@ -429,6 +499,14 @@ function render(){
         return `<div class="board-card-wrap" style="${st}">${domino(c,cls)}</div>`;
       }).join('')
     : '<div class="board-empty">Menunggu 0-0 sebagai pembukaan…</div>';
+  let endpoint=document.getElementById('endpoints');
+  if(endpoint) endpoint.remove();
+  if(r.board?.length){
+    endpoint=document.createElement('div');
+    endpoint.id='endpoints';
+    endpoint.innerHTML=`<span class="end-badge left-end">● ${r.left}</span><span class="end-badge right-end">${r.right} ●</span>`;
+    $('table').appendChild(endpoint);
+  }
 
   let hand=Array.isArray(r.hand?.[me.id])?r.hand[me.id]:[];
   hand=hand.map((c,idx)=>({c,idx})).sort((x,y)=>{
