@@ -313,6 +313,57 @@ pointer-events:none;white-space:nowrap}
 .placement-picker{z-index:130!important}
 </style>
 
+
+<style id="v7-board-and-play-fix">
+#table{overflow:hidden!important}
+#board{
+  position:absolute!important;
+  left:2%!important;right:2%!important;top:12%!important;bottom:25%!important;
+  min-height:0!important;
+  display:block!important;
+  overflow:visible!important;
+  padding:0!important;
+}
+#board .board-card-wrap{
+  position:absolute!important;
+  width:82px!important;height:50px!important;
+  margin:0!important;
+  display:block!important;
+  pointer-events:none!important;
+}
+#board .board-card-wrap .domino{
+  position:absolute!important;
+  left:50%!important;top:50%!important;
+  width:76px!important;height:46px!important;
+  min-width:76px!important;
+  transform:translate(-50%,-50%)!important;
+  margin:0!important;
+}
+#board .board-card-wrap .divider{
+  top:5px!important;bottom:5px!important;
+}
+#board .board-empty{
+  position:absolute!important;
+  left:50%!important;top:50%!important;
+  transform:translate(-50%,-50%)!important;
+  white-space:nowrap!important;
+}
+#hand{
+  z-index:150!important;
+}
+#selectedCardLayer{
+  z-index:300!important;
+}
+#placementPicker{
+  z-index:260!important;
+}
+#play,#pass{
+  position:relative!important;
+  z-index:400!important;
+  pointer-events:auto!important;
+}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -545,83 +596,82 @@ async function joinAfter(){
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 
 function snakeSlot(side, rank){
-  // Each end grows from the center in a compact zig-zag path.
-  // This keeps every domino visible instead of piling them on top of each other.
-  const paths = {
-    right:[
-      [56,50,0],[64,50,0],[72,50,0],[80,50,0],
-      [86,45, -90],[86,36,-90],[86,27,-90],
-      [80,22,180],[72,22,180],[64,22,180],[56,22,180],
-      [50,28,90],[50,37,90],[50,46,90]
-    ],
+  const paths={
     left:[
-      [44,50,0],[36,50,0],[28,50,0],[20,50,0],
-      [14,55,90],[14,64,90],[14,73,90],
-      [20,78,180],[28,78,180],[36,78,180],[44,78,180],
-      [50,72,-90],[50,63,-90],[50,54,-90]
+      [45,50,0],[37,50,0],[29,50,0],[21,50,0],
+      [14,43,90],[14,34,90],[14,25,90],
+      [21,18,180],[29,18,180],[37,18,180],[45,18,180],
+      [50,25,90],[50,34,90],[50,43,90]
+    ],
+    right:[
+      [55,50,0],[63,50,0],[71,50,0],[79,50,0],
+      [86,57,90],[86,66,90],[86,75,90],
+      [79,82,180],[71,82,180],[63,82,180],[55,82,180],
+      [50,75,90],[50,66,90],[50,57,90]
     ]
   };
-  return paths[side]?.[Math.min(rank,13)] || null;
+  return paths[side]?.[Math.min(rank,13)]||null;
 }
 function boardCardStyle(slot,index,total){
   if(!slot || slot.side==='center')
-    return `left:50%;top:50%;transform:translate(-50%,-50%) rotate(0deg);`;
+    return 'left:50%;top:50%;transform:translate(-50%,-50%) rotate(0deg);';
   let rank=0;
   const layouts=localState?.boardLayout||[];
-  for(let i=0;i<index;i++){
-    if(layouts[i]?.side===slot.side) rank++;
-  }
+  for(let i=0;i<index;i++) if(layouts[i]?.side===slot.side) rank++;
   const p=snakeSlot(slot.side,rank);
-  if(!p) return `left:50%;top:50%;transform:translate(-50%,-50%) rotate(0deg);`;
-  const rot=p[2] + (slot.lane==='bottom' ? 0 : 0);
-  return `left:${p[0]}%;top:${p[1]}%;transform:translate(-50%,-50%) rotate(${rot}deg);`;
+  if(!p) return 'left:50%;top:50%;transform:translate(-50%,-50%) rotate(0deg);';
+  return `left:${p[0]}%;top:${p[1]}%;transform:translate(-50%,-50%) rotate(${p[2]}deg);`;
 }
+
 function placementUI(r,c){
   if(!r.started || !r.board.length || !c || !canPlay(c,r.left,r.right)) return '';
   const canL=c[0]===r.left||c[1]===r.left;
   const canR=c[0]===r.right||c[1]===r.right;
   const active=(side,lane)=>placementChoice?.side===side&&placementChoice?.lane===lane?' active':'';
   return `<div class="placement-picker">
-    <div class="pick-title">Pilih ujung angka yang sama → lalu ATAS / BAWAH</div>
+    <div class="pick-title">Pilih posisi kartu</div>
     <div class="pick-row">
-      ${canL?`<button class="place-btn${active('left','top')}" onclick="choosePlacement('left','top')">⬅ ATAS</button>
-              <button class="place-btn${active('left','bottom')}" onclick="choosePlacement('left','bottom')">⬅ BAWAH</button>`:''}
-      ${canR?`<button class="place-btn${active('right','top')}" onclick="choosePlacement('right','top')">ATAS ➡</button>
-              <button class="place-btn${active('right','bottom')}" onclick="choosePlacement('right','bottom')">BAWAH ➡</button>`:''}
+      ${canL?`<button class="place-btn${active('left','top')}" onclick="choosePlacement('left','top')">ATAS ⬅ ${r.left}</button>
+              <button class="place-btn${active('left','bottom')}" onclick="choosePlacement('left','bottom')">BAWAH ⬅ ${r.left}</button>`:''}
+      ${canR?`<button class="place-btn${active('right','top')}" onclick="choosePlacement('right','top')">${r.right} ➡ ATAS</button>
+              <button class="place-btn${active('right','bottom')}" onclick="choosePlacement('right','bottom')">${r.right} ➡ BAWAH</button>`:''}
     </div>
   </div>`;
 }
+
 window.choosePlacement=(side,lane)=>{
   placementChoice={side,lane};
   render();
 };
 function render(){
-  let r=localState, ps=Object.values(r.players||{}), max=Number(r.maxPlayers||4);
-  if(!r) return;
+  const r=localState;
+  if(!r || !me) return;
+  const ps=Object.values(r.players||{});
+  const max=Number(r.maxPlayers||4);
 
-  $('modeBadge').textContent='MODE '+max+' PEMAIN • '+ps.length+'/'+max+' TERISI';
+  $('modeBadge').textContent=`MODE ${max} PEMAIN • ${ps.length}/${max} TERISI`;
 
   $('players').innerHTML=ps.map((p,i)=>{
-    let n=(r.hand?.[p.id]||[]).length;
-    const isTurn = r.started && ((r.turnId && r.turnId===p.id) || (!r.turnId && r.turn===i));
+    const n=(r.hand?.[p.id]||[]).length;
+    const isTurn=r.started&&(
+      (r.turnId ? r.turnId===p.id : ps.findIndex(q=>q.id===p.id)===Number(r.turn||0))
+    );
     return `<div class="seat ${p.id===me.id?'me':''}">
       <div class="av">${p.avatar||'🙂'}</div>
-      <div class="info">
-        <b>${esc(p.name)}</b>
-        ${isTurn ? '<small class="turn">● Giliran</small>' :
-          `<small>${r.started ? n+' kartu' : 'Menunggu mulai...'}</small>`}
-      </div>
+      <div class="info"><b>${esc(p.name)}</b>
+      ${isTurn?'<small class="turn">● Giliran</small>':`<small>${r.started?n+' kartu':'Menunggu mulai...'}</small>`}</div>
     </div>`;
   }).join('');
 
-  $('board').innerHTML=r.board?.length
-    ? r.board.map((c,i)=>{
-        const key=c[0]+'-'+c[1]+'-'+i;
-        const cls=lastPlayedKey===key?'played-card':'';
-        const st=boardCardStyle(r.boardLayout?.[i],i,r.board.length);
-        return `<div class="board-card-wrap" style="${st}">${domino(c,cls)}</div>`;
-      }).join('')
-    : '<div class="board-empty">Pilih kartu <b>0-0</b> untuk membuka permainan</div>';
+  const boardEl=$('board');
+  if(r.board?.length){
+    boardEl.innerHTML=r.board.map((c,i)=>{
+      const st=boardCardStyle(r.boardLayout?.[i],i,r.board.length);
+      return `<div class="board-card-wrap" style="${st}">${domino(c)}</div>`;
+    }).join('');
+  }else{
+    boardEl.innerHTML='<div class="board-empty">Pilih kartu <b>0-0</b> untuk membuka permainan</div>';
+  }
 
   let endpoint=document.getElementById('endpoints');
   if(endpoint) endpoint.remove();
@@ -633,27 +683,22 @@ function render(){
   }
 
   let hand=Array.isArray(r.hand?.[me.id])?r.hand[me.id]:[];
-  hand=hand.map((c,idx)=>({c,idx})).sort((x,y)=>{
-    let ax=points(x.c), ay=points(y.c);
-    return ax-ay || x.c[0]-y.c[0] || x.c[1]-y.c[1];
+  const indexed=hand.map((c,idx)=>({c,idx})).sort((a,b)=>{
+    return points(a.c)-points(b.c)||a.c[0]-b.c[0]||a.c[1]-b.c[1];
   });
+  if(selected!==null&&!indexed.some(x=>x.idx===selected)) selected=null;
 
-  if(selected!==null && !hand.some(x=>x.idx===selected)) selected=null;
-
-  $('hand').innerHTML=hand.map(x=>
-    `<div class="domino hand-card ${selected===x.idx?'selected is-raised':''}"
-      data-index="${x.idx}"
-      title="Klik kartu untuk memilih / mengangkat"
+  $('hand').innerHTML=indexed.map(x=>
+    `<div class="domino hand-card ${selected===x.idx?'selected is-raised':''}" data-index="${x.idx}"
       onclick="selectCard(this,${x.idx})">
       ${pipFace(x.c[0])}<div class="divider"></div>${pipFace(x.c[1])}
     </div>`
   ).join('');
 
-  const chosen=selected!==null ? hand.find(x=>x.idx===selected)?.c : null;
-  let oldPicker=document.getElementById('placementPicker');
+  const oldPicker=document.getElementById('placementPicker');
   if(oldPicker) oldPicker.remove();
-
-  if(chosen && r.board?.length){
+  const chosen=selected!==null?hand[selected]:null;
+  if(chosen&&r.board?.length){
     const picker=document.createElement('div');
     picker.id='placementPicker';
     picker.innerHTML=placementUI(r,chosen);
@@ -661,41 +706,32 @@ function render(){
   }
 
   if(!r.started){
-    $('status').textContent=r.starting
-      ? 'Membagikan kartu…'
-      : 'Menunggu '+max+' pemain ('+ps.length+'/'+max+')…';
+    $('status').textContent=r.starting?'Membagikan kartu…':`Menunggu ${max} pemain (${ps.length}/${max})…`;
   }else if(r.winner){
     $('status').textContent='Permainan selesai.';
   }else{
-    const current=ps.find(p=>(r.turnId&&r.turnId===p.id)||(!r.turnId&&ps.indexOf(p)===r.turn));
-    $('status').textContent='Giliran: '+(current?.name||'…')+
-      (r.board?.length ? ' • Pilih kartu yang cocok' : ' • Wajib buka dengan 0-0');
+    const cur=r.turnId?ps.find(p=>p.id===r.turnId):ps[Number(r.turn||0)];
+    $('status').textContent=`Giliran: ${cur?.name||'…'} • ${r.board?.length?'Pilih kartu yang cocok':'Wajib buka dengan 0-0'}`;
   }
 
-  const myTurn = r.started && !r.winner &&
-    ((r.turnId && r.turnId===me.id) || (!r.turnId && ps.findIndex(p=>p.id===me.id)===r.turn));
-
+  const myTurn=r.started&&!r.winner&&(
+    r.turnId ? r.turnId===me.id : ps.findIndex(p=>p.id===me.id)===Number(r.turn||0)
+  );
   $('play').disabled=!myTurn;
-  $('pass').disabled=!myTurn || !r.board?.length;
+  $('pass').disabled=!myTurn||!r.board?.length;
 
-  let lb=Object.entries(r.scores||{}).sort((a,b)=>b[1]-a[1]);
+  const lb=Object.entries(r.scores||{}).sort((a,b)=>b[1]-a[1]);
   $('leaderboard').innerHTML=lb.length
     ? lb.map((x,i)=>`<div class="leader"><span>#${i+1} ${esc(r.players[x[0]]?.name||'')}</span><b>${x[1]||0}</b></div>`).join('')
     : '<div class="small">Skor muncul setelah ronde.</div>';
 
   if(r.winner){
-    let p=r.players[r.winner];
-    $('winText').textContent=p?.id===me.id
-      ? '👑 ANDA ADALAH KING GAPLE'
-      : '👑 '+(p?.name||'Pemenang')+' ADALAH KING GAPLE';
+    const p=r.players[r.winner];
+    $('winText').textContent=p?.id===me.id?'👑 ANDA ADALAH KING GAPLE':'👑 '+(p?.name||'Pemenang')+' ADALAH KING GAPLE';
     $('winSub').textContent='Selamat! Ronde selesai.';
     $('modal').classList.remove('hidden');
-    confetti();
-  }else{
-    $('modal').classList.add('hidden');
-  }
+  }else $('modal').classList.add('hidden');
 
-  // A separate visual layer guarantees the selected card is visibly above the hand.
   let layer=document.getElementById('selectedCardLayer');
   if(!layer){
     layer=document.createElement('div');
@@ -706,7 +742,7 @@ function render(){
   if(selected!==null){
     const el=document.querySelector(`#hand .hand-card[data-index="${selected}"]`);
     if(el){
-      const a=el.getBoundingClientRect(), t=$('table').getBoundingClientRect();
+      const a=el.getBoundingClientRect(),t=$('table').getBoundingClientRect();
       const ghost=document.createElement('div');
       ghost.className='domino selected-ghost';
       ghost.style.left=(a.left+a.width/2-t.left)+'px';
@@ -737,65 +773,69 @@ window.selectCard=(el,i)=>{
 }
 
 async function play(){
-  if(!localState || !me) return;
-  let r=roomFromStore(JSON.parse(JSON.stringify(localState)));
-  let ps=Object.values(r.players||{});
-  let idx=ps.findIndex(p=>p.id===me.id);
+  if(!localState||!me) return toast('Room belum siap');
 
-  const myTurn = r.started && !r.winner &&
-    ((r.turnId && r.turnId===me.id) || (!r.turnId && idx===r.turn));
+  const r=roomFromStore(JSON.parse(JSON.stringify(localState)));
+  const ps=Object.values(r.players||{});
+  const idx=ps.findIndex(p=>p.id===me.id);
+  const myTurn=r.started&&!r.winner&&(
+    r.turnId ? r.turnId===me.id : idx===Number(r.turn||0)
+  );
   if(!myTurn){
-    const current=ps.find(p=>(r.turnId&&r.turnId===p.id)||(!r.turnId&&ps.indexOf(p)===r.turn));
-    return toast('Belum giliran kamu. Giliran: '+(current?.name||'pemain lain'));
+    const cur=r.turnId?ps.find(p=>p.id===r.turnId):ps[Number(r.turn||0)];
+    return toast('Belum giliran kamu. Giliran: '+(cur?.name||'pemain lain'));
   }
 
-  let hand=[...(r.hand?.[me.id]||[])];
-  if(selected===null || !hand[selected]) return toast('Klik kartu dulu');
+  const hand=[...(r.hand?.[me.id]||[])];
+  if(selected===null||!hand[selected]) return toast('Klik kartu yang mau dimainkan');
 
-  let c=hand[selected];
+  const c=hand[selected];
 
+  // Opening: 0-0 goes straight to the center of the board.
   if(!r.board.length){
-    if(!(c[0]===0&&c[1]===0)) return toast('Pembukaan wajib kartu 0-0');
+    if(c[0]!==0||c[1]!==0) return toast('Kartu pembukaan wajib 0-0');
+
     r.board=[c];
     r.boardLayout=[{side:'center',lane:'mid',rot:0}];
-    r.left=0; r.right=0; r.opening=c;
+    r.left=0;r.right=0;r.opening=c;
     hand.splice(selected,1);
   }else{
-    if(!canPlay(c,r.left,r.right)) return toast('Kartu tidak nyambung dengan angka ujung meja');
-
-    let side=placementChoice?.side;
-    let lane=placementChoice?.lane;
+    if(!canPlay(c,r.left,r.right))
+      return toast(`Tidak cocok. Ujung meja: ${r.left} dan ${r.right}`);
 
     const canL=c[0]===r.left||c[1]===r.left;
     const canR=c[0]===r.right||c[1]===r.right;
 
+    let side=placementChoice?.side;
+    let lane=placementChoice?.lane;
+
     if(!side){
-      if(canL && !canR) side='left';
-      else if(canR && !canL) side='right';
-      else return toast('Pilih ATAS/BAWAH pada ujung yang kamu mau');
+      if(canL&&!canR) side='left';
+      else if(canR&&!canL) side='right';
+      else return toast('Pilih ATAS atau BAWAH dulu');
     }
-    lane=lane||'top';
+    if(!lane) return toast('Pilih ATAS atau BAWAH dulu');
 
     if(side==='left'){
-      let oc=orient(c,r.left);
+      const oc=orient(c,r.left);
       r.board.unshift(oc);
       r.boardLayout=r.boardLayout||[];
-      r.boardLayout.unshift({side:'left',lane,rot:lane==='top'?-12:12});
+      r.boardLayout.unshift({side:'left',lane,rot:0});
       r.left=oc[0];
     }else{
-      let oc=orient(c,r.right);
+      const oc=orient(c,r.right);
       r.board.push(oc);
       r.boardLayout=r.boardLayout||[];
-      r.boardLayout.push({side:'right',lane,rot:lane==='top'?12:-12});
+      r.boardLayout.push({side:'right',lane,rot:0});
       r.right=oc[1];
     }
     hand.splice(selected,1);
   }
 
-  selected=null;
-  placementChoice=null;
   r.hand[me.id]=hand;
   r.passes=0;
+  selected=null;
+  placementChoice=null;
 
   if(!hand.length){
     r.winner=me.id;
@@ -807,58 +847,76 @@ async function play(){
     r.turnId=ps[next]?.id||null;
   }
 
-  await updateDoc(doc(db,'rooms',roomId),{
-    hand:Object.fromEntries(Object.entries(r.hand||{}).map(([id,h])=>[id,cardsToStore(h)])),
-    board:cardsToStore(r.board),
-    boardLayout:r.boardLayout||[],
-    left:r.left??null,
-    right:r.right??null,
-    opening:cardToStore(r.opening),
-    passes:r.passes||0,
-    turn:r.turn,
-    turnId:r.turnId||null,
-    winner:r.winner||null,
-    scores:r.scores||{},
-    started:true
-  });
+  // Render immediately so the player sees the card enter the board even
+  // before Firestore's snapshot returns.
+  localState=r;
   render();
+
+  try{
+    await updateDoc(doc(db,'rooms',roomId),{
+      hand:Object.fromEntries(Object.entries(r.hand||{}).map(([id,h])=>[id,cardsToStore(h)])),
+      board:cardsToStore(r.board),
+      boardLayout:r.boardLayout||[],
+      left:r.left??null,
+      right:r.right??null,
+      opening:cardToStore(r.opening),
+      passes:r.passes||0,
+      turn:Number(r.turn||0),
+      turnId:r.turnId||null,
+      winner:r.winner||null,
+      scores:r.scores||{},
+      started:true,
+      starting:false
+    });
+  }catch(e){
+    console.error('PLAY ERROR',e);
+    toast('Gagal menyimpan langkah: '+(e?.message||e));
+  }
 }
 
 async function pass(){
-  if(!localState || !me) return;
-  let r=roomFromStore(JSON.parse(JSON.stringify(localState)));
-  let ps=Object.values(r.players||{});
-  let idx=ps.findIndex(p=>p.id===me.id);
-
-  const myTurn = r.started && !r.winner &&
-    ((r.turnId && r.turnId===me.id) || (!r.turnId && idx===r.turn));
-  if(!myTurn) return;
+  if(!localState||!me) return;
+  const r=roomFromStore(JSON.parse(JSON.stringify(localState)));
+  const ps=Object.values(r.players||{});
+  const idx=ps.findIndex(p=>p.id===me.id);
+  const myTurn=r.started&&!r.winner&&(
+    r.turnId ? r.turnId===me.id : idx===Number(r.turn||0)
+  );
+  if(!myTurn) return toast('Belum giliran kamu');
 
   r.passes=(r.passes||0)+1;
   const next=(idx+1)%ps.length;
   r.turn=next;
   r.turnId=ps[next]?.id||null;
 
-  let winner=null, scores={...(r.scores||{})};
+  const scores={...(r.scores||{})};
   if(r.passes>=ps.length){
     ps.forEach(p=>{
       scores[p.id]=(scores[p.id]||0)+(r.hand?.[p.id]||[]).reduce((a,c)=>a+points(c),0);
     });
-    winner=ps.slice().sort((a,b)=>
+    const winner=ps.slice().sort((a,b)=>
       (r.hand?.[a.id]||[]).reduce((x,c)=>x+points(c),0)-
       (r.hand?.[b.id]||[]).reduce((x,c)=>x+points(c),0)
     )[0];
     if(winner) r.winner=winner.id;
   }
 
-  await updateDoc(doc(db,'rooms',roomId),{
-    passes:r.passes,
-    turn:r.turn,
-    turnId:r.turnId||null,
-    winner:r.winner||null,
-    scores
-  });
+  r.scores=scores;
+  localState=r;
   render();
+
+  try{
+    await updateDoc(doc(db,'rooms',roomId),{
+      passes:r.passes,
+      turn:r.turn,
+      turnId:r.turnId||null,
+      winner:r.winner||null,
+      scores:r.scores
+    });
+  }catch(e){
+    console.error('PASS ERROR',e);
+    toast('Gagal menyimpan Pass: '+(e?.message||e));
+  }
 }
 
 async function send(text){if(!text.trim())return;await addDoc(collection(db,'rooms',roomId,'chat'),{name:me.name,avatar:me.avatar,text:text.trim(),createdAt:serverTimestamp()});}
