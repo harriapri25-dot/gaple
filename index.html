@@ -665,6 +665,42 @@ pointer-events:none;white-space:nowrap}
 #placementPicker{bottom:17%!important;width:210px!important}
 </style>
 
+
+<style id="v14-no-overlap-horizontal">
+/* Papan benar-benar satu garis horizontal. Setiap kartu punya ruang sendiri. */
+#board{
+  left:1%!important; right:1%!important;
+  top:15%!important; bottom:34%!important;
+  overflow:visible!important;
+}
+#board .board-card-wrap{
+  width:34px!important;
+  height:22px!important;
+  margin:0!important;
+  padding:0!important;
+  z-index:30!important;
+}
+#board .board-card-wrap .domino{
+  width:32px!important;
+  min-width:32px!important;
+  height:20px!important;
+  border-radius:4px!important;
+  box-sizing:border-box!important;
+  box-shadow:0 2px 5px rgba(0,0,0,.32)!important;
+}
+#board .board-card-wrap .divider{
+  top:2px!important; bottom:2px!important; width:1px!important;
+}
+#board .board-card-wrap .pip{
+  transform:scale(.34)!important;
+}
+#board .board-card-wrap.center-opening .domino{
+  width:34px!important; min-width:34px!important; height:22px!important;
+}
+.left-end{left:.5%!important;top:50%!important}
+.right-end{right:.5%!important;top:50%!important}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -916,13 +952,15 @@ async function joinAfter(){
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 
 function snakeSlot(side,rank){
-  const step=4.05;
+  // 3.8% of the board width is approximately one card width + a tiny gap.
+  // Both ends grow away from the 0-0 opening, keeping the whole chain visible.
+  const step=3.8;
   const x=side==='left' ? 50-(rank+1)*step : 50+(rank+1)*step;
   return [x,50,0];
 }
 
 function boardCardStyle(slot,index,total){
-  if(!slot||slot.side==='center'){
+  if(!slot || slot.side==='center'){
     return 'left:50%;top:50%;transform:translate(-50%,-50%) rotate(0deg);';
   }
 
