@@ -209,6 +209,51 @@ pointer-events:none;white-space:nowrap}
 #hand .hand-card{will-change:transform}
 
 </style>
+
+<style id="v5-card-rise-fix">
+#hand{
+  overflow:visible!important;
+  overflow-x:visible!important;
+  overflow-y:visible!important;
+  min-height:215px!important;
+  padding:58px 8px 28px!important;
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:center!important;
+  gap:0!important;
+  position:absolute!important;
+  z-index:40!important;
+}
+#hand .hand-card{
+  flex:0 1 auto!important;
+  width:64px!important; min-width:64px!important; height:122px!important;
+  margin-left:-5px!important; margin-right:-5px!important;
+  position:relative!important;
+  transform-origin:center bottom!important;
+  transition:transform .25s cubic-bezier(.18,.9,.22,1),filter .18s,box-shadow .2s!important;
+  cursor:pointer!important;
+}
+#hand .hand-card:first-child{margin-left:0!important}
+#hand .hand-card:last-child{margin-right:0!important}
+#hand .hand-card:hover{
+  transform:translate3d(0,-14px,0) rotate(0deg) scale(1.05)!important;
+  z-index:80!important;
+}
+#hand .hand-card.is-raised,#hand .hand-card.selected{
+  transform:translate3d(0,-52px,0) rotate(0deg) scale(1.10)!important;
+  z-index:200!important;
+  outline:3px solid var(--gold)!important;
+  filter:brightness(1.08)!important;
+  box-shadow:0 24px 40px rgba(245,196,81,.46),0 0 0 7px rgba(245,196,81,.10)!important;
+}
+@media(max-width:850px){
+ #hand{padding:52px 4px 24px!important;justify-content:flex-start!important}
+ #hand .hand-card{width:56px!important;min-width:56px!important;height:112px!important;margin-left:-7px!important;margin-right:-7px!important}
+ #hand .hand-card:first-child{margin-left:0!important}
+ #hand .hand-card:last-child{margin-right:0!important}
+ #hand .hand-card.is-raised,#hand .hand-card.selected{transform:translate3d(0,-44px,0) rotate(0deg) scale(1.08)!important}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -530,7 +575,7 @@ function render(){
   });
   if(selected!==null && !hand.some(x=>x.idx===selected)) selected=null;
   $('hand').innerHTML=hand.map(x=>
-    `<div class="domino hand-card ${selected===x.idx?'selected':''}" data-index="${x.idx}"
+    `<div class="domino hand-card ${selected===x.idx?'selected':''}" data-index="${x.idx}" data-index="${x.idx}"
       title="Klik untuk memilih • klik Mainkan untuk memainkan • double-click untuk langsung memainkan"
       onclick="selectCard(this,${x.idx})" ondblclick="play()">
       ${pipFace(x.c[0])}<div class="divider"></div>${pipFace(x.c[1])}
@@ -588,38 +633,22 @@ function domino(c,extra=''){return `<div class="domino ${extra}">${pipFace(c[0])
 window.selectCard=(el,i)=>{
   const h=Array.isArray(localState?.hand?.[me?.id])?localState.hand[me.id]:[];
   if(!h[i]) return;
-
   selected=(selected===i?null:i);
   placementChoice=null;
-
-  // Immediate visual response: the clicked card rises before the Firebase/UI render.
-  document.querySelectorAll('#hand .hand-card').forEach(card=>{
-    card.classList.remove('selected','is-raised');
-    card.style.removeProperty('transform');
-    card.style.removeProperty('z-index');
-    card.style.removeProperty('filter');
-    card.style.removeProperty('box-shadow');
-  });
-
-  if(selected!==null && el){
-    el.classList.add('selected','is-raised');
-    el.style.setProperty('transform','translate3d(0,-46px,0) rotate(0deg) scale(1.09)','important');
-    el.style.setProperty('z-index','100','important');
-    el.style.setProperty('filter','brightness(1.08)','important');
-    el.style.setProperty('box-shadow','0 22px 38px rgba(245,196,81,.44),0 0 0 7px rgba(245,196,81,.09)','important');
-  }
-
-  // Render placement controls, then re-apply the same raised state to the new DOM.
   render();
   requestAnimationFrame(()=>{
-    const chosen=document.querySelector(`#hand .hand-card[data-index="${i}"]`);
-    if(selected===i && chosen){
-      chosen.classList.add('selected','is-raised');
-      chosen.style.setProperty('transform','translate3d(0,-46px,0) rotate(0deg) scale(1.09)','important');
-      chosen.style.setProperty('z-index','100','important');
-      chosen.style.setProperty('filter','brightness(1.08)','important');
-      chosen.style.setProperty('box-shadow','0 22px 38px rgba(245,196,81,.44),0 0 0 7px rgba(245,196,81,.09)','important');
-      chosen.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+    document.querySelectorAll('#hand .hand-card').forEach(card=>{
+      card.classList.remove('is-raised');
+      card.style.removeProperty('transform');
+      card.style.removeProperty('z-index');
+    });
+    if(selected===i){
+      const chosen=document.querySelector(`#hand .hand-card[data-index="${i}"]`);
+      if(chosen){
+        chosen.classList.add('is-raised');
+        chosen.style.setProperty('transform','translate3d(0,-52px,0) rotate(0deg) scale(1.10)','important');
+        chosen.style.setProperty('z-index','200','important');
+      }
     }
   });
 }
