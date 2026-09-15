@@ -587,6 +587,16 @@ pointer-events:none;white-space:nowrap}
 #placementPicker{bottom:18%!important;width:210px!important}
 </style>
 
+
+<style id="v12-start-recovery">
+#status{min-height:22px}
+.start-hint{
+  display:inline-block;padding:9px 14px;border-radius:12px;
+  background:rgba(2,28,19,.72);border:1px solid rgba(245,196,81,.25);
+  color:#dce8df;font-weight:700;
+}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -654,7 +664,7 @@ const CONFIG = {
 };
 
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import {getFirestore, doc, setDoc, updateDoc, onSnapshot, collection, addDoc, query, orderBy, serverTimestamp, getDoc} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import {getFirestore, doc, setDoc, updateDoc, onSnapshot, collection, addDoc, query, orderBy, serverTimestamp, getDoc, runTransaction} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const app=initializeApp(CONFIG), db=getFirestore(app);
 const $=id=>document.getElementById(id);
@@ -694,7 +704,7 @@ function shuffle(a){for(let i=a.length-1;i;i--){let j=Math.floor(Math.random()*(
 function points(c){return c[0]+c[1]}
 function canPlay(c,left,right){return c[0]===left||c[1]===left||c[0]===right||c[1]===right}
 function orient(c,target){return c[0]===target?[c[0],c[1]]:[c[1],c[0]]}
-function makeRoom(){return {players:{},hand:{},board:[],boardLayout:[],left:null,right:null,turn:0,turnId:null,started:false,opening:null,passes:0,winner:null,scores:{},history:[],createdAt:Date.now()}}
+function makeRoom(){return {players:{},hand:{},board:[],boardLayout:[],left:null,right:null,turn:0,turnId:null,started:false,starting:false,opening:null,passes:0,winner:null,scores:{},history:[],hostId:null,createdAt:Date.now()}}
 function cardToStore(c){
   if(!Array.isArray(c) || c.length!==2) return null;
   return {a:Number(c[0]),b:Number(c[1])};
@@ -726,6 +736,7 @@ async function create(){
   me={id:id(),name,avatar};
   let r=makeRoom();
   r.maxPlayers=playerMode;
+  r.hostId=me.id;
   r.starting=false;
   r.players[me.id]={...me};
   r.hand[me.id]=[];
@@ -762,45 +773,63 @@ async function join(){
 async function tryStartGame(r){
   const ps=Object.values(r.players||{});
   const max=Number(r.maxPlayers||4);
-  if(![2,4].includes(max) || ps.length!==max || r.started || starting) return;
-  if(ps[0]?.id!==me.id) return; // room creator deals
+  if(![2,4].includes(max) || ps.length!==max || r.started || r.starting) return;
+  if(starting) return;
 
   starting=true;
-  render();
   try{
-    const d=shuffle(deck());
-    const hands={};
-    const per=Math.floor(28/max);
+    const roomRef=doc(db,'rooms',roomId);
 
-    ps.forEach((p,i)=>{
-      hands[p.id]=d.slice(i*per,(i+1)*per);
-    });
+    await runTransaction(db, async tx=>{
+      const snap=await tx.get(roomRef);
+      if(!snap.exists()) return;
 
-    let starter=ps.findIndex(p=>(hands[p.id]||[]).some(c=>c[0]===0&&c[1]===0));
-    if(starter<0) starter=0;
+      const fresh=snap.data();
+      const players=Object.values(fresh.players||{});
+      const freshMax=Number(fresh.maxPlayers||4);
 
-    // Firestore-safe: arrays contain objects, never arrays.
-    const handForDb={};
-    ps.forEach(p=>handForDb[p.id]=cardsToStore(hands[p.id]));
+      // Re-check everything inside the transaction. This makes starting safe
+      // even if both players receive the "room full" snapshot simultaneously.
+      if(![2,4].includes(freshMax) ||
+         players.length!==freshMax ||
+         fresh.started ||
+         fresh.starting) return;
 
-    await updateDoc(doc(db,'rooms',roomId),{
-      hand:handForDb,
-      board:[],
-      boardLayout:[],
-      left:null,
-      right:null,
-      opening:null,
-      turn:starter,
-      turnId:ps[starter]?.id||null,
-      passes:0,
-      winner:null,
-      started:true,
-      starting:false
+      const d=shuffle(deck());
+      const hands={};
+      const per=Math.floor(28/freshMax);
+
+      players.forEach((p,i)=>{
+        hands[p.id]=d.slice(i*per,(i+1)*per);
+      });
+
+      let starter=players.findIndex(p=>
+        (hands[p.id]||[]).some(c=>c[0]===0&&c[1]===0)
+      );
+      if(starter<0) starter=0;
+
+      const handForDb={};
+      players.forEach(p=>handForDb[p.id]=cardsToStore(hands[p.id]));
+
+      tx.update(roomRef,{
+        hand:handForDb,
+        board:[],
+        boardLayout:[],
+        left:null,
+        right:null,
+        opening:null,
+        turn:starter,
+        turnId:players[starter]?.id||null,
+        passes:0,
+        winner:null,
+        scores:fresh.scores||{},
+        started:true,
+        starting:false
+      });
     });
   }catch(e){
     console.error('DEAL ERROR',e);
-    $('status').textContent='❌ Gagal membagikan kartu';
-    alert('Gagal membagikan kartu.\\n\\nKode: '+(e?.code||'unknown')+'\\nPesan: '+(e?.message||e));
+    toast('Gagal memulai permainan: '+(e?.message||e));
   }finally{
     starting=false;
   }
