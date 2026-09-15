@@ -254,6 +254,65 @@ pointer-events:none;white-space:nowrap}
  #hand .hand-card.is-raised,#hand .hand-card.selected{transform:translate3d(0,-44px,0) rotate(0deg) scale(1.08)!important}
 }
 </style>
+
+<style id="v6-robust-ui">
+#hand{
+  overflow:visible!important;
+  min-height:190px!important;
+  padding:46px 4px 20px!important;
+  align-items:flex-end!important;
+  justify-content:center!important;
+  gap:0!important;
+  z-index:60!important;
+}
+#hand .hand-card{
+  width:62px!important;
+  min-width:62px!important;
+  height:118px!important;
+  margin-left:-6px!important;
+  margin-right:-6px!important;
+  position:relative!important;
+  transform:translate3d(0,0,0)!important;
+  transform-origin:center bottom!important;
+  z-index:1!important;
+  cursor:pointer!important;
+  transition:transform .22s cubic-bezier(.18,.9,.22,1),box-shadow .2s,filter .2s!important;
+}
+#hand .hand-card:hover{
+  transform:translate3d(0,-12px,0) scale(1.04)!important;
+  z-index:20!important;
+}
+#hand .hand-card.is-raised,
+#hand .hand-card.selected{
+  transform:translate3d(0,-58px,0) scale(1.10)!important;
+  z-index:999!important;
+  outline:3px solid var(--gold)!important;
+  box-shadow:0 25px 42px rgba(245,196,81,.55),0 0 0 8px rgba(245,196,81,.12)!important;
+  filter:brightness(1.10)!important;
+}
+#selectedCardLayer{
+  position:absolute!important;
+  inset:0!important;
+  pointer-events:none!important;
+  z-index:1000!important;
+  overflow:visible!important;
+}
+#selectedCardLayer .selected-ghost{
+  position:absolute!important;
+  width:62px!important;
+  height:118px!important;
+  transform:translate(-50%,-100%) scale(1.10)!important;
+  border:3px solid var(--gold)!important;
+  box-shadow:0 25px 45px rgba(245,196,81,.55),0 0 0 8px rgba(245,196,81,.12)!important;
+  filter:brightness(1.10)!important;
+  border-radius:9px!important;
+  background:linear-gradient(145deg,#fff,#e8e8e8)!important;
+}
+.game-actions{z-index:120!important}
+.status-wrap{z-index:115!important}
+.placement-picker{z-index:130!important}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -361,7 +420,7 @@ function shuffle(a){for(let i=a.length-1;i;i--){let j=Math.floor(Math.random()*(
 function points(c){return c[0]+c[1]}
 function canPlay(c,left,right){return c[0]===left||c[1]===left||c[0]===right||c[1]===right}
 function orient(c,target){return c[0]===target?[c[0],c[1]]:[c[1],c[0]]}
-function makeRoom(){return {players:{},hand:{},board:[],boardLayout:[],left:null,right:null,turn:0,started:false,opening:null,passes:0,winner:null,scores:{},history:[],createdAt:Date.now()}}
+function makeRoom(){return {players:{},hand:{},board:[],boardLayout:[],left:null,right:null,turn:0,turnId:null,started:false,opening:null,passes:0,winner:null,scores:{},history:[],createdAt:Date.now()}}
 function cardToStore(c){
   if(!Array.isArray(c) || c.length!==2) return null;
   return {a:Number(c[0]),b:Number(c[1])};
@@ -458,6 +517,7 @@ async function tryStartGame(r){
       right:null,
       opening:null,
       turn:starter,
+      turnId:ps[starter]?.id||null,
       passes:0,
       winner:null,
       started:true,
@@ -537,15 +597,18 @@ window.choosePlacement=(side,lane)=>{
 };
 function render(){
   let r=localState, ps=Object.values(r.players||{}), max=Number(r.maxPlayers||4);
+  if(!r) return;
+
   $('modeBadge').textContent='MODE '+max+' PEMAIN • '+ps.length+'/'+max+' TERISI';
 
   $('players').innerHTML=ps.map((p,i)=>{
     let n=(r.hand?.[p.id]||[]).length;
+    const isTurn = r.started && ((r.turnId && r.turnId===p.id) || (!r.turnId && r.turn===i));
     return `<div class="seat ${p.id===me.id?'me':''}">
       <div class="av">${p.avatar||'🙂'}</div>
       <div class="info">
         <b>${esc(p.name)}</b>
-        ${r.started && r.turn===i ? '<small class="turn">● Giliran</small>' :
+        ${isTurn ? '<small class="turn">● Giliran</small>' :
           `<small>${r.started ? n+' kartu' : 'Menunggu mulai...'}</small>`}
       </div>
     </div>`;
@@ -558,7 +621,8 @@ function render(){
         const st=boardCardStyle(r.boardLayout?.[i],i,r.board.length);
         return `<div class="board-card-wrap" style="${st}">${domino(c,cls)}</div>`;
       }).join('')
-    : '<div class="board-empty">Menunggu 0-0 sebagai pembukaan…</div>';
+    : '<div class="board-empty">Pilih kartu <b>0-0</b> untuk membuka permainan</div>';
+
   let endpoint=document.getElementById('endpoints');
   if(endpoint) endpoint.remove();
   if(r.board?.length){
@@ -570,20 +634,25 @@ function render(){
 
   let hand=Array.isArray(r.hand?.[me.id])?r.hand[me.id]:[];
   hand=hand.map((c,idx)=>({c,idx})).sort((x,y)=>{
-    let ax=x.c[0]+x.c[1], ay=y.c[0]+y.c[1];
+    let ax=points(x.c), ay=points(y.c);
     return ax-ay || x.c[0]-y.c[0] || x.c[1]-y.c[1];
   });
+
   if(selected!==null && !hand.some(x=>x.idx===selected)) selected=null;
+
   $('hand').innerHTML=hand.map(x=>
-    `<div class="domino hand-card ${selected===x.idx?'selected':''}" data-index="${x.idx}" data-index="${x.idx}"
-      title="Klik untuk memilih • klik Mainkan untuk memainkan • double-click untuk langsung memainkan"
-      onclick="selectCard(this,${x.idx})" ondblclick="play()">
+    `<div class="domino hand-card ${selected===x.idx?'selected is-raised':''}"
+      data-index="${x.idx}"
+      title="Klik kartu untuk memilih / mengangkat"
+      onclick="selectCard(this,${x.idx})">
       ${pipFace(x.c[0])}<div class="divider"></div>${pipFace(x.c[1])}
     </div>`
   ).join('');
+
   const chosen=selected!==null ? hand.find(x=>x.idx===selected)?.c : null;
   let oldPicker=document.getElementById('placementPicker');
   if(oldPicker) oldPicker.remove();
+
   if(chosen && r.board?.length){
     const picker=document.createElement('div');
     picker.id='placementPicker';
@@ -593,16 +662,21 @@ function render(){
 
   if(!r.started){
     $('status').textContent=r.starting
-      ? 'Menyiapkan '+max+' pemain dan membagikan kartu…'
+      ? 'Membagikan kartu…'
       : 'Menunggu '+max+' pemain ('+ps.length+'/'+max+')…';
   }else if(r.winner){
     $('status').textContent='Permainan selesai.';
   }else{
-    $('status').textContent='Giliran: '+(ps[r.turn]?.name||'…')+' • Klik kartu untuk mengangkatnya • pilih ATAS/BAWAH • lalu Mainkan';
+    const current=ps.find(p=>(r.turnId&&r.turnId===p.id)||(!r.turnId&&ps.indexOf(p)===r.turn));
+    $('status').textContent='Giliran: '+(current?.name||'…')+
+      (r.board?.length ? ' • Pilih kartu yang cocok' : ' • Wajib buka dengan 0-0');
   }
 
-  $('play').disabled=!r.started || !!r.winner;
-  $('pass').disabled=!r.started || !!r.winner;
+  const myTurn = r.started && !r.winner &&
+    ((r.turnId && r.turnId===me.id) || (!r.turnId && ps.findIndex(p=>p.id===me.id)===r.turn));
+
+  $('play').disabled=!myTurn;
+  $('pass').disabled=!myTurn || !r.board?.length;
 
   let lb=Object.entries(r.scores||{}).sort((a,b)=>b[1]-a[1]);
   $('leaderboard').innerHTML=lb.length
@@ -617,8 +691,32 @@ function render(){
     $('winSub').textContent='Selamat! Ronde selesai.';
     $('modal').classList.remove('hidden');
     confetti();
+  }else{
+    $('modal').classList.add('hidden');
+  }
+
+  // A separate visual layer guarantees the selected card is visibly above the hand.
+  let layer=document.getElementById('selectedCardLayer');
+  if(!layer){
+    layer=document.createElement('div');
+    layer.id='selectedCardLayer';
+    $('table').appendChild(layer);
+  }
+  layer.innerHTML='';
+  if(selected!==null){
+    const el=document.querySelector(`#hand .hand-card[data-index="${selected}"]`);
+    if(el){
+      const a=el.getBoundingClientRect(), t=$('table').getBoundingClientRect();
+      const ghost=document.createElement('div');
+      ghost.className='domino selected-ghost';
+      ghost.style.left=(a.left+a.width/2-t.left)+'px';
+      ghost.style.top=(a.bottom-t.top)+'px';
+      ghost.innerHTML=el.innerHTML;
+      layer.appendChild(ghost);
+    }
   }
 }
+
 const PIPS={
 0:[],1:[[1,1]],2:[[0,0],[2,2]],3:[[0,0],[1,1],[2,2]],
 4:[[0,0],[0,2],[2,0],[2,2]],5:[[0,0],[0,2],[1,1],[2,0],[2,2]],
@@ -636,48 +734,45 @@ window.selectCard=(el,i)=>{
   selected=(selected===i?null:i);
   placementChoice=null;
   render();
-  requestAnimationFrame(()=>{
-    document.querySelectorAll('#hand .hand-card').forEach(card=>{
-      card.classList.remove('is-raised');
-      card.style.removeProperty('transform');
-      card.style.removeProperty('z-index');
-    });
-    if(selected===i){
-      const chosen=document.querySelector(`#hand .hand-card[data-index="${i}"]`);
-      if(chosen){
-        chosen.classList.add('is-raised');
-        chosen.style.setProperty('transform','translate3d(0,-52px,0) rotate(0deg) scale(1.10)','important');
-        chosen.style.setProperty('z-index','200','important');
-      }
-    }
-  });
 }
+
 async function play(){
+  if(!localState || !me) return;
   let r=roomFromStore(JSON.parse(JSON.stringify(localState)));
-  let ps=Object.values(r.players||{}), idx=ps.findIndex(p=>p.id===me.id);
-  if(!r?.started || idx!==r.turn || r.winner) return;
+  let ps=Object.values(r.players||{});
+  let idx=ps.findIndex(p=>p.id===me.id);
+
+  const myTurn = r.started && !r.winner &&
+    ((r.turnId && r.turnId===me.id) || (!r.turnId && idx===r.turn));
+  if(!myTurn){
+    const current=ps.find(p=>(r.turnId&&r.turnId===p.id)||(!r.turnId&&ps.indexOf(p)===r.turn));
+    return toast('Belum giliran kamu. Giliran: '+(current?.name||'pemain lain'));
+  }
 
   let hand=[...(r.hand?.[me.id]||[])];
-  if(selected===null || !hand[selected]) return toast('Pilih kartu dulu');
+  if(selected===null || !hand[selected]) return toast('Klik kartu dulu');
+
   let c=hand[selected];
-  const chosenPlacement=placementChoice ? {...placementChoice} : null;
 
   if(!r.board.length){
-    if(!(c[0]===0&&c[1]===0)) return toast('Pembukaan wajib 0-0');
-    r.board=[c]; r.boardLayout=[{side:'center',lane:'mid',rot:0}];
-    r.left=0; r.right=0; r.opening=c; hand.splice(selected,1);
+    if(!(c[0]===0&&c[1]===0)) return toast('Pembukaan wajib kartu 0-0');
+    r.board=[c];
+    r.boardLayout=[{side:'center',lane:'mid',rot:0}];
+    r.left=0; r.right=0; r.opening=c;
+    hand.splice(selected,1);
   }else{
-    if(!canPlay(c,r.left,r.right)) return toast('Kartu tidak nyambung dengan ujung meja');
+    if(!canPlay(c,r.left,r.right)) return toast('Kartu tidak nyambung dengan angka ujung meja');
 
-    let side=chosenPlacement?.side;
-    let lane=chosenPlacement?.lane;
+    let side=placementChoice?.side;
+    let lane=placementChoice?.lane;
+
+    const canL=c[0]===r.left||c[1]===r.left;
+    const canR=c[0]===r.right||c[1]===r.right;
+
     if(!side){
-      // If only one end is possible, still require the visual lane choice.
-      const canL=c[0]===r.left||c[1]===r.left;
-      const canR=c[0]===r.right||c[1]===r.right;
       if(canL && !canR) side='left';
       else if(canR && !canL) side='right';
-      else return toast('Pilih posisi kartu: ATAS atau BAWAH');
+      else return toast('Pilih ATAS/BAWAH pada ujung yang kamu mau');
     }
     lane=lane||'top';
 
@@ -697,8 +792,6 @@ async function play(){
     hand.splice(selected,1);
   }
 
-  const playedKey=c[0]+'-'+c[1]+'-'+Date.now();
-  lastPlayedKey=playedKey;
   selected=null;
   placementChoice=null;
   r.hand[me.id]=hand;
@@ -709,29 +802,42 @@ async function play(){
     r.scores={...(r.scores||{})};
     r.scores[me.id]=(r.scores[me.id]||0)+100;
   }else{
-    r.turn=(r.turn+1)%ps.length;
+    const next=(idx+1)%ps.length;
+    r.turn=next;
+    r.turnId=ps[next]?.id||null;
   }
 
   await updateDoc(doc(db,'rooms',roomId),{
     hand:Object.fromEntries(Object.entries(r.hand||{}).map(([id,h])=>[id,cardsToStore(h)])),
     board:cardsToStore(r.board),
     boardLayout:r.boardLayout||[],
-    left:r.left??null,right:r.right??null,
+    left:r.left??null,
+    right:r.right??null,
     opening:cardToStore(r.opening),
-    passes:r.passes||0,turn:r.turn,winner:r.winner||null,
-    scores:r.scores||{},started:true
+    passes:r.passes||0,
+    turn:r.turn,
+    turnId:r.turnId||null,
+    winner:r.winner||null,
+    scores:r.scores||{},
+    started:true
   });
   render();
-  setTimeout(()=>{lastPlayedKey=null;render()},550);
 }
+
 async function pass(){
-  let r=JSON.parse(JSON.stringify(localState));
-  r=roomFromStore(r);
-  let ps=Object.values(r.players||{}),idx=ps.findIndex(p=>p.id===me.id);
-  if(!r?.started || idx!==r.turn || r.winner) return;
+  if(!localState || !me) return;
+  let r=roomFromStore(JSON.parse(JSON.stringify(localState)));
+  let ps=Object.values(r.players||{});
+  let idx=ps.findIndex(p=>p.id===me.id);
+
+  const myTurn = r.started && !r.winner &&
+    ((r.turnId && r.turnId===me.id) || (!r.turnId && idx===r.turn));
+  if(!myTurn) return;
 
   r.passes=(r.passes||0)+1;
-  r.turn=(r.turn+1)%ps.length;
+  const next=(idx+1)%ps.length;
+  r.turn=next;
+  r.turnId=ps[next]?.id||null;
 
   let winner=null, scores={...(r.scores||{})};
   if(r.passes>=ps.length){
@@ -748,11 +854,13 @@ async function pass(){
   await updateDoc(doc(db,'rooms',roomId),{
     passes:r.passes,
     turn:r.turn,
+    turnId:r.turnId||null,
     winner:r.winner||null,
     scores
   });
   render();
 }
+
 async function send(text){if(!text.trim())return;await addDoc(collection(db,'rooms',roomId,'chat'),{name:me.name,avatar:me.avatar,text:text.trim(),createdAt:serverTimestamp()});}
 window.sendEmoji=e=>send(e);
 $('create').onclick=create;$('join').onclick=join;$('play').onclick=play;$('pass').onclick=pass;
