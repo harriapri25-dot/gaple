@@ -477,6 +477,17 @@ pointer-events:none;white-space:nowrap}
 #play,#pass{position:relative!important;z-index:400!important;pointer-events:auto!important}
 </style>
 
+
+<style id="v9-simple-picker">
+#placementPicker{width:240px!important;padding:10px 12px!important;bottom:20%!important}
+#placementPicker .pick-title{font-size:13px!important;margin-bottom:8px!important}
+#placementPicker .pick-row{display:flex!important;gap:8px!important;justify-content:center!important}
+#placementPicker .place-btn{
+  min-width:96px!important;padding:10px 13px!important;font-size:14px!important;
+  border-radius:11px!important;
+}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -710,19 +721,18 @@ function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;',
 
 function snakeSlot(side,rank){
   const left=[
-    [45,52,0],[37,52,0],[29,52,0],[21,52,0],
-    [15,45,90],[15,34,90],[15,23,90],
-    [22,17,180],[31,17,180],[40,17,180],
-    [47,23,90],[47,33,90],[47,43,90]
+    [46,52,0],[38,52,0],[30,52,0],[22,52,0],
+    [17,46,90],[17,37,90],[17,28,90],
+    [24,22,180],[33,22,180],[42,22,180],
+    [48,28,90],[48,37,90],[48,46,90]
   ];
   const right=[
-    [55,52,0],[63,52,0],[71,52,0],[79,52,0],
-    [85,59,90],[85,70,90],[85,81,90],
-    [78,87,180],[69,87,180],[60,87,180],
-    [53,81,90],[53,71,90],[53,61,90]
+    [54,52,0],[62,52,0],[70,52,0],[78,52,0],
+    [83,58,90],[83,67,90],[83,76,90],
+    [76,82,180],[67,82,180],[58,82,180],
+    [52,76,90],[52,67,90],[52,58,90]
   ];
-  const p=(side==='left'?left:right)[Math.min(rank,12)];
-  return p||null;
+  return (side==='left'?left:right)[Math.min(rank,12)]||null;
 }
 
 function boardCardStyle(slot,index,total){
@@ -748,22 +758,22 @@ function placementUI(r,c){
   if(!r.started || !r.board.length || !c || !canPlay(c,r.left,r.right)) return '';
   const canL=c[0]===r.left||c[1]===r.left;
   const canR=c[0]===r.right||c[1]===r.right;
-  const active=(side,lane)=>placementChoice?.side===side&&placementChoice?.lane===lane?' active':'';
+  if(!canL && !canR) return '';
+  const lane=placementChoice?.lane;
   return `<div class="placement-picker">
-    <div class="pick-title">Pilih posisi kartu</div>
+    <div class="pick-title">Pilih posisi</div>
     <div class="pick-row">
-      ${canL?`<button class="place-btn${active('left','top')}" onclick="choosePlacement('left','top')">ATAS ⬅ ${r.left}</button>
-              <button class="place-btn${active('left','bottom')}" onclick="choosePlacement('left','bottom')">BAWAH ⬅ ${r.left}</button>`:''}
-      ${canR?`<button class="place-btn${active('right','top')}" onclick="choosePlacement('right','top')">${r.right} ➡ ATAS</button>
-              <button class="place-btn${active('right','bottom')}" onclick="choosePlacement('right','bottom')">${r.right} ➡ BAWAH</button>`:''}
+      <button class="place-btn ${lane==='top'?'active':''}" onclick="choosePlacement('top')">⬆ ATAS</button>
+      <button class="place-btn ${lane==='bottom'?'active':''}" onclick="choosePlacement('bottom')">⬇ BAWAH</button>
     </div>
   </div>`;
 }
 
-window.choosePlacement=(side,lane)=>{
-  placementChoice={side,lane};
+window.choosePlacement=(lane)=>{
+  placementChoice={lane};
   render();
 };
+
 function render(){
   const r=localState;
   if(!r || !me) return;
@@ -912,10 +922,9 @@ async function play(){
 
   const c=hand[selected];
 
-  // Opening: 0-0 goes straight to the center of the board.
+  // 0-0 always opens directly in the center.
   if(!r.board.length){
     if(c[0]!==0||c[1]!==0) return toast('Kartu pembukaan wajib 0-0');
-
     r.board=[c];
     r.boardLayout=[{side:'center',lane:'mid',rot:0}];
     r.left=0;r.right=0;r.opening=c;
@@ -927,15 +936,20 @@ async function play(){
     const canL=c[0]===r.left||c[1]===r.left;
     const canR=c[0]===r.right||c[1]===r.right;
 
-    let side=placementChoice?.side;
-    let lane=placementChoice?.lane;
-
-    if(!side){
-      if(canL&&!canR) side='left';
-      else if(canR&&!canL) side='right';
-      else return toast('Pilih ATAS atau BAWAH dulu');
-    }
+    // Only ATAS / BAWAH is asked from the player.
+    // The end is automatic: if only one end matches, use it. If both match,
+    // use the side with fewer cards so the snake stays balanced.
+    const lane=placementChoice?.lane;
     if(!lane) return toast('Pilih ATAS atau BAWAH dulu');
+
+    let side;
+    if(canL&&!canR) side='left';
+    else if(canR&&!canL) side='right';
+    else{
+      const leftCount=(r.boardLayout||[]).filter(x=>x?.side==='left').length;
+      const rightCount=(r.boardLayout||[]).filter(x=>x?.side==='right').length;
+      side=leftCount<=rightCount?'left':'right';
+    }
 
     if(side==='left'){
       const oc=orient(c,r.left);
@@ -968,8 +982,7 @@ async function play(){
     r.turnId=ps[next]?.id||null;
   }
 
-  // Render immediately so the player sees the card enter the board even
-  // before Firestore's snapshot returns.
+  // Immediate local render: the card visibly enters the center/snake now.
   localState=r;
   render();
 
