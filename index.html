@@ -488,6 +488,64 @@ pointer-events:none;white-space:nowrap}
 }
 </style>
 
+
+<style id="v10-horizontal-dominoes">
+/* ===== BOARD: horizontal, compact, all dominoes fully visible ===== */
+#board{
+  left:2%!important;right:2%!important;top:7%!important;bottom:31%!important;
+}
+#board .board-card-wrap{
+  width:50px!important;height:30px!important;
+}
+#board .board-card-wrap .domino{
+  width:48px!important;height:28px!important;min-width:48px!important;
+  border-radius:5px!important;border-width:1px!important;
+  box-shadow:0 3px 7px rgba(0,0,0,.32)!important;
+}
+#board .board-card-wrap .divider{
+  top:3px!important;bottom:3px!important;width:1px!important;
+}
+#board .board-card-wrap .pip{
+  transform:scale(.52)!important;
+}
+#board .board-empty{
+  font-size:12px!important;
+}
+#board .board-card-wrap.center-opening .domino{
+  width:54px!important;height:31px!important;min-width:54px!important;
+}
+
+/* Compact snake paths. Each piece is horizontal; bends are vertical only. */
+#board .board-card-wrap{
+  transform-origin:center center!important;
+}
+
+/* End labels sit outside the compact chain. */
+.left-end{left:3%!important;top:50%!important}
+.right-end{right:3%!important;top:50%!important}
+
+/* Keep the hand separate from the board and compact enough for 14 cards. */
+#hand{
+  min-height:166px!important;
+  padding:34px 2px 14px!important;
+}
+#hand .hand-card{
+  width:54px!important;min-width:54px!important;height:104px!important;
+  margin-left:-6px!important;margin-right:-6px!important;
+}
+#hand .hand-card.is-raised,#hand .hand-card.selected{
+  transform:translateY(-44px) scale(1.08)!important;
+}
+#selectedCardLayer .selected-ghost{
+  width:54px!important;height:104px!important;
+}
+
+/* Only two simple placement choices. */
+#placementPicker{
+  bottom:19%!important;width:220px!important;
+}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -721,16 +779,16 @@ function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;',
 
 function snakeSlot(side,rank){
   const left=[
-    [46,52,0],[38,52,0],[30,52,0],[22,52,0],
-    [17,46,90],[17,37,90],[17,28,90],
-    [24,22,180],[33,22,180],[42,22,180],
-    [48,28,90],[48,37,90],[48,46,90]
+    [47,54,0],[41,54,0],[35,54,0],[29,54,0],[23,54,0],
+    [17,47,90],[17,39,90],
+    [23,31,0],[29,31,0],[35,31,0],[41,31,0],[47,31,0],
+    [47,39,90]
   ];
   const right=[
-    [54,52,0],[62,52,0],[70,52,0],[78,52,0],
-    [83,58,90],[83,67,90],[83,76,90],
-    [76,82,180],[67,82,180],[58,82,180],
-    [52,76,90],[52,67,90],[52,58,90]
+    [53,54,0],[59,54,0],[65,54,0],[71,54,0],[77,54,0],
+    [83,61,90],[83,69,90],
+    [77,77,0],[71,77,0],[65,77,0],[59,77,0],[53,77,0],
+    [53,69,90]
   ];
   return (side==='left'?left:right)[Math.min(rank,12)]||null;
 }
@@ -743,15 +801,16 @@ function boardCardStyle(slot,index,total){
   const layouts=localState?.boardLayout||[];
   for(let i=0;i<index;i++) if(layouts[i]?.side===slot.side) rank++;
   const p=snakeSlot(slot.side,rank);
-  if(!p) return 'left:50%;top:52%;transform:translate(-50%,-50%);';
+  if(!p) return 'left:50%;top:52%;transform:translate(-50%,-50%) rotate(0deg);';
 
-  let x=p[0],y=p[1],rot=p[2]||0;
-  // For the first few pieces, ATAS/BAWAH gives a small visible offset.
-  if(rank<4){
-    y += slot.lane==='top' ? -5 : 5;
-    rot += slot.lane==='top' ? -2 : 2;
-  }
-  return `left:${x}%;top:${y}%;transform:translate(-50%,-50%) rotate(${rot}deg);`;
+  let x=p[0],y=p[1];
+  // Keep domino faces horizontal. A bend is represented by a small vertical
+  // displacement rather than rotating the domino, which keeps every number
+  // easy to read and prevents the face from looking cut off.
+  if(slot.lane==='top' && rank<5) y-=1.5;
+  if(slot.lane==='bottom' && rank<5) y+=1.5;
+
+  return `left:${x}%;top:${y}%;transform:translate(-50%,-50%) rotate(0deg);`;
 }
 
 function placementUI(r,c){
