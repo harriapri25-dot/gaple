@@ -546,6 +546,47 @@ pointer-events:none;white-space:nowrap}
 }
 </style>
 
+
+<style id="v11-clean-gaple-board">
+/* Clean, centered Gaple board inspired by the reference: a readable chain
+   around the center, with no overlapping domino faces. */
+#board{
+  left:1.5%!important;right:1.5%!important;top:5%!important;bottom:29%!important;
+}
+#board .board-card-wrap{
+  width:50px!important;height:30px!important;
+}
+#board .board-card-wrap .domino{
+  width:48px!important;height:28px!important;min-width:48px!important;
+  border-radius:5px!important;border:1px solid rgba(0,0,0,.22)!important;
+  box-shadow:0 3px 7px rgba(0,0,0,.28)!important;
+}
+#board .board-card-wrap .pip{transform:scale(.50)!important}
+#board .board-card-wrap .divider{top:3px!important;bottom:3px!important;width:1px!important}
+#board .board-card-wrap.center-opening .domino{
+  width:56px!important;height:32px!important;min-width:56px!important;
+  box-shadow:0 0 18px rgba(245,196,81,.30),0 4px 9px rgba(0,0,0,.34)!important;
+}
+#board .board-empty{font-size:12px!important}
+#endpoints{inset:0!important}
+.left-end{left:1%!important;top:50%!important}
+.right-end{right:1%!important;top:50%!important}
+
+/* More room for the center board, less visual competition from the hand. */
+#hand{
+  min-height:162px!important;padding:30px 2px 12px!important;
+}
+#hand .hand-card{
+  width:52px!important;min-width:52px!important;height:100px!important;
+  margin-left:-6px!important;margin-right:-6px!important;
+}
+#hand .hand-card.is-raised,#hand .hand-card.selected{
+  transform:translateY(-42px) scale(1.08)!important;
+}
+#selectedCardLayer .selected-ghost{width:52px!important;height:100px!important}
+#placementPicker{bottom:18%!important;width:210px!important}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -779,38 +820,31 @@ function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;',
 
 function snakeSlot(side,rank){
   const left=[
-    [47,54,0],[41,54,0],[35,54,0],[29,54,0],[23,54,0],
-    [17,47,90],[17,39,90],
-    [23,31,0],[29,31,0],[35,31,0],[41,31,0],[47,31,0],
-    [47,39,90]
+    [47,56,0],[41,56,0],[35,56,0],[29,56,0],[23,56,0],
+    [17,56,0],
+    [17,45,0],[23,45,0],[29,45,0],[35,45,0],
+    [41,34,0],[35,34,0],[29,34,0]
   ];
   const right=[
-    [53,54,0],[59,54,0],[65,54,0],[71,54,0],[77,54,0],
-    [83,61,90],[83,69,90],
-    [77,77,0],[71,77,0],[65,77,0],[59,77,0],[53,77,0],
-    [53,69,90]
+    [53,56,0],[59,56,0],[65,56,0],[71,56,0],[77,56,0],
+    [83,56,0],
+    [83,45,0],[77,45,0],[71,45,0],[65,45,0],
+    [59,34,0],[65,34,0],[71,34,0]
   ];
   return (side==='left'?left:right)[Math.min(rank,12)]||null;
 }
 
 function boardCardStyle(slot,index,total){
   if(!slot||slot.side==='center'){
-    return 'left:50%;top:52%;transform:translate(-50%,-50%) rotate(0deg);';
+    return 'left:50%;top:56%;transform:translate(-50%,-50%) rotate(0deg);';
   }
   let rank=0;
   const layouts=localState?.boardLayout||[];
   for(let i=0;i<index;i++) if(layouts[i]?.side===slot.side) rank++;
   const p=snakeSlot(slot.side,rank);
-  if(!p) return 'left:50%;top:52%;transform:translate(-50%,-50%) rotate(0deg);';
+  if(!p) return 'left:50%;top:56%;transform:translate(-50%,-50%) rotate(0deg);';
 
-  let x=p[0],y=p[1];
-  // Keep domino faces horizontal. A bend is represented by a small vertical
-  // displacement rather than rotating the domino, which keeps every number
-  // easy to read and prevents the face from looking cut off.
-  if(slot.lane==='top' && rank<5) y-=1.5;
-  if(slot.lane==='bottom' && rank<5) y+=1.5;
-
-  return `left:${x}%;top:${y}%;transform:translate(-50%,-50%) rotate(0deg);`;
+  return `left:${p[0]}%;top:${p[1]}%;transform:translate(-50%,-50%) rotate(0deg);`;
 }
 
 function placementUI(r,c){
