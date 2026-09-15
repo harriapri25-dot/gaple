@@ -597,6 +597,74 @@ pointer-events:none;white-space:nowrap}
 }
 </style>
 
+
+<style id="v13-single-row-board">
+/* === PAPAN GAPLE: SATU BARIS HORIZONTAL, RAPI, TIDAK MENUMPUK === */
+#board{
+  left:1%!important;
+  right:1%!important;
+  top:15%!important;
+  bottom:34%!important;
+  overflow:visible!important;
+}
+#board:before{
+  left:2%!important;right:2%!important;top:27%!important;bottom:27%!important;
+  border-radius:999px!important;
+}
+#board .board-card-wrap{
+  width:38px!important;
+  height:24px!important;
+  z-index:30!important;
+}
+#board .board-card-wrap .domino{
+  width:36px!important;
+  min-width:36px!important;
+  height:22px!important;
+  border-radius:4px!important;
+  border:1px solid rgba(0,0,0,.24)!important;
+  box-shadow:0 2px 5px rgba(0,0,0,.28)!important;
+}
+#board .board-card-wrap .divider{
+  top:2px!important;
+  bottom:2px!important;
+  width:1px!important;
+}
+#board .board-card-wrap .pip{
+  transform:scale(.38)!important;
+}
+#board .board-card-wrap.center-opening .domino{
+  width:40px!important;
+  min-width:40px!important;
+  height:24px!important;
+  box-shadow:0 0 16px rgba(245,196,81,.35),0 3px 7px rgba(0,0,0,.32)!important;
+}
+#board .board-empty{
+  font-size:12px!important;
+}
+.left-end{left:0.5%!important;top:50%!important}
+.right-end{right:0.5%!important;top:50%!important}
+
+/* Give the hand a little more breathing room below the horizontal chain. */
+#hand{
+  min-height:160px!important;
+  padding:28px 2px 10px!important;
+}
+#hand .hand-card{
+  width:51px!important;
+  min-width:51px!important;
+  height:98px!important;
+  margin-left:-6px!important;
+  margin-right:-6px!important;
+}
+#hand .hand-card.is-raised,#hand .hand-card.selected{
+  transform:translateY(-40px) scale(1.08)!important;
+}
+#selectedCardLayer .selected-ghost{
+  width:51px!important;height:98px!important;
+}
+#placementPicker{bottom:17%!important;width:210px!important}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -848,31 +916,23 @@ async function joinAfter(){
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 
 function snakeSlot(side,rank){
-  const left=[
-    [47,56,0],[41,56,0],[35,56,0],[29,56,0],[23,56,0],
-    [17,56,0],
-    [17,45,0],[23,45,0],[29,45,0],[35,45,0],
-    [41,34,0],[35,34,0],[29,34,0]
-  ];
-  const right=[
-    [53,56,0],[59,56,0],[65,56,0],[71,56,0],[77,56,0],
-    [83,56,0],
-    [83,45,0],[77,45,0],[71,45,0],[65,45,0],
-    [59,34,0],[65,34,0],[71,34,0]
-  ];
-  return (side==='left'?left:right)[Math.min(rank,12)]||null;
+  const step=4.05;
+  const x=side==='left' ? 50-(rank+1)*step : 50+(rank+1)*step;
+  return [x,50,0];
 }
 
 function boardCardStyle(slot,index,total){
   if(!slot||slot.side==='center'){
-    return 'left:50%;top:56%;transform:translate(-50%,-50%) rotate(0deg);';
+    return 'left:50%;top:50%;transform:translate(-50%,-50%) rotate(0deg);';
   }
+
   let rank=0;
   const layouts=localState?.boardLayout||[];
-  for(let i=0;i<index;i++) if(layouts[i]?.side===slot.side) rank++;
-  const p=snakeSlot(slot.side,rank);
-  if(!p) return 'left:50%;top:56%;transform:translate(-50%,-50%) rotate(0deg);';
+  for(let i=0;i<index;i++){
+    if(layouts[i]?.side===slot.side) rank++;
+  }
 
+  const p=snakeSlot(slot.side,rank);
   return `left:${p[0]}%;top:${p[1]}%;transform:translate(-50%,-50%) rotate(0deg);`;
 }
 
@@ -883,7 +943,7 @@ function placementUI(r,c){
   if(!canL && !canR) return '';
   const lane=placementChoice?.lane;
   return `<div class="placement-picker">
-    <div class="pick-title">Pilih posisi</div>
+    <div class="pick-title">Pilih posisi kartu</div>
     <div class="pick-row">
       <button class="place-btn ${lane==='top'?'active':''}" onclick="choosePlacement('top')">⬆ ATAS</button>
       <button class="place-btn ${lane==='bottom'?'active':''}" onclick="choosePlacement('bottom')">⬇ BAWAH</button>
